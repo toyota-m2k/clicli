@@ -1,0 +1,95 @@
+﻿<UserControl x:Class="CliCliBoy.view.SamplingColor"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:CliCliBoy"
+             xmlns:view="clr-namespace:CliCliBoy.view"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <UserControl.Resources>
+        <ResourceDictionary Source="CommonResource.xaml"/>
+    </UserControl.Resources>
+
+    <Grid>
+        <StackPanel x:Name="SamplingColorMain" VerticalAlignment="Center" HorizontalAlignment="Center" >
+            <TextBlock FontWeight="Bold" TextWrapping="Wrap" TextAlignment="Center">
+                    Move mouse to target point, <LineBreak/>and press 'A' key or '+' key in numeric pad.
+            </TextBlock>
+
+            <CheckBox x:Name="GPTChk" HorizontalAlignment="Center" Margin="0,20,0,0" Checked="CheckBox_Checked" Unchecked="CheckBox_Unchecked">
+                <TextBlock Text="{Binding RemainSec, StringFormat='get color after {0} seconds.'}"/>
+            </CheckBox>
+
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,15,0,5">
+                <Border BorderBrush="Gray" BorderThickness="1" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="20"/>
+                            <ColumnDefinition Width="20"/>
+                            <ColumnDefinition Width="20"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="20"/>
+                            <RowDefinition Height="20"/>
+                            <RowDefinition Height="20"/>
+                        </Grid.RowDefinitions>
+                        <Grid Grid.Row="0" Grid.Column="0" Background="{Binding [0]}"/>
+                        <Grid Grid.Row="0" Grid.Column="1" Background="{Binding [1]}"/>
+                        <Grid Grid.Row="0" Grid.Column="2" Background="{Binding [4]}"/>
+                        <Grid Grid.Row="1" Grid.Column="0" Background="{Binding [3]}"/>
+                        <Grid Grid.Row="1" Grid.Column="1" Background="{Binding [8]}"/>
+                        <Grid Grid.Row="1" Grid.Column="2" Background="{Binding [6]}"/>
+                        <Grid Grid.Row="2" Grid.Column="0" Background="{Binding [3]}"/>
+                        <Grid Grid.Row="2" Grid.Column="1" Background="{Binding [5]}"/>
+                        <Grid Grid.Row="2" Grid.Column="2" Background="{Binding [7]}"/>
+                    </Grid>
+                </Border>
+                <StackPanel Orientation="Vertical" Margin="10,0,0,0"  VerticalAlignment="Bottom">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                        <TextBlock VerticalAlignment="Center">
+                            <TextBlock.Text>
+                                <MultiBinding StringFormat="Sampling at ({0},{1})">
+                                    <Binding Path="SamplingPoint.X" />
+                                    <Binding Path="SamplingPoint.Y" />
+                                </MultiBinding>
+                            </TextBlock.Text>
+                        </TextBlock>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="0,5,0,0">
+                        <Button Style="{StaticResource NorButton}" Content="Show Pos." Margin="0,0,0,0" Click="Btn_MoveTo"/>
+                        <Button Style="{StaticResource NorButton}" Content="Adjust" Margin="5,0,0,0" Padding="8,0" Click="Btn_Adjust"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+                        <TextBlock Text="Sampling Size" Margin="0,0,10,0"/>
+                        <local:NumericTextBox Width="40" Text="{Binding SamplingInflation}"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="0,5,0,0" VerticalAlignment="Center">
+                        <Button Style="{StaticResource NorButton}" Content="Sampling" Click="Btn_SampleNow" PreviewMouseDown="Btn_SamplingDown" PreviewMouseUp="Btn_SamplingUp"/>
+                        <CheckBox x:Name="HoldOn" VerticalAlignment="Center" IsChecked="{Binding HoldOnSampling}">
+                            <TextBlock Text="Hold On"/>
+                        </CheckBox>
+
+                    </StackPanel>
+                </StackPanel>
+                <StackPanel Orientation="Vertical" Margin="10,0,0,0"  VerticalAlignment="Center">
+                    <RadioButton Content="Skip"  IsChecked="{Binding Condition.Type, Converter={StaticResource EnumBooleanConverter}, ConverterParameter=SKIP}"  GroupName="CondType"/>
+                    <RadioButton Content="Wait"  IsChecked="{Binding Condition.Type, Converter={StaticResource EnumBooleanConverter}, ConverterParameter=WAIT}"    GroupName="CondType"/>
+                    <RadioButton Content="None"  IsChecked="{Binding Condition.Type, Converter={StaticResource EnumBooleanConverter}, ConverterParameter=NONE}"   GroupName="CondType"/>
+                </StackPanel>
+            </StackPanel>
+            
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <Button Content="OK" Width="80" Margin="5,20,5,0" Click="OkButton_Click" Style="{StaticResource OkButton}" IsDefault="True"/>
+                <Button Content="Cancel" Width="80" Margin="5,20,5,0" Click="CancelButton_Click" Style="{StaticResource CancelButton}" IsCancel="True"/>
+            </StackPanel>
+
+        </StackPanel>
+
+        <Grid x:Name="SamplingColorSub" Visibility="Hidden">
+            <view:PositionTuner x:Name="PositionTuner"/>
+        </Grid>
+
+
+    </Grid>
+</UserControl>

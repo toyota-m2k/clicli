@@ -1,0 +1,198 @@
+﻿<ResourceDictionary 
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:system="clr-namespace:System;assembly=mscorlib"
+    xmlns:local="clr-namespace:CliCliBoy"
+    xmlns:model="clr-namespace:CliCliBoy.model"
+    >
+    <system:Double x:Key="ToolBtnWidth">50</system:Double>
+    <system:Double x:Key="ToolBtnHeight">50</system:Double>
+    
+    <Thickness x:Key="ToolBtnMargin" Left="2" Top="0" Right="0" Bottom="0"/>
+    <Thickness x:Key="ToolBtnSpMargin" Left="10" Top="0" Right="0" Bottom="0"/>
+    
+    <BooleanToVisibilityConverter x:Key="BoolToVisibility"/>
+    <local:NegBoolVisibilityConverter x:Key="NegBoolToVisibility"/>
+    <local:VisibilityHiddenFalseConverter x:Key="VisibilityHiddenFalseConverter"/>
+    <local:VisibilityHiddenTrueConverter x:Key="VisibilityHiddenTrueConverter"/>
+    <local:TypeNameConverter x:Key="TypeNameConverter"/>
+    <local:EnumBooleanConverter x:Key="EnumBooleanConverter" />
+    <local:NegEnumVisibilityConverter x:Key="NegEnumBooleanConverter" />
+    <local:EnumVisibilityConverter x:Key="EnumVisibilityConverter" />
+    <local:TypePointVisibilityConverter x:Key="TypePointVisibilityConverter" />
+
+    <SolidColorBrush x:Key="DlgBg" Color="#FFEAFFBC" />
+    <SolidColorBrush x:Key="ButtonBg" Color="#FFFFE8B0" />
+    <SolidColorBrush x:Key="StatusBarBg" Color="#FFFFDEFF" />
+    <SolidColorBrush x:Key="DlgTitleBg" Color="#FFCEBCFF" />
+    <SolidColorBrush x:Key="TBtnBg" Color="#FFFFFF" />
+    <SolidColorBrush x:Key="TBProjectBg" Color="#FF30002A" />
+    <SolidColorBrush x:Key="TBTargetBg" Color="#FF0D6174" />
+    <SolidColorBrush x:Key="TBOperatingBg" Color="#FF6D7803" />
+
+    <BitmapImage x:Key="StartIcon" UriSource="../resources/start.png"/>
+    <BitmapImage x:Key="StopIcon" UriSource="../resources/stop.png"/>
+    <BitmapImage x:Key="LStartIcon" UriSource="../resources/start-large.png"/>
+    <BitmapImage x:Key="LStopIcon" UriSource="../resources/stop-large.png"/>
+    <BitmapImage x:Key="AddIcon" UriSource="../resources/add.png"/>
+    <BitmapImage x:Key="RemoveIcon" UriSource="../resources/remove.png"/>
+    <BitmapImage x:Key="UpIcon" UriSource="../resources/up.png"/>
+    <BitmapImage x:Key="DownIcon" UriSource="../resources/down.png"/>
+    <BitmapImage x:Key="RelocateIcon" UriSource="../resources/relocate.png"/>
+    <BitmapImage x:Key="MenuIcon" UriSource="../resources/menu.png"/>
+
+    <BitmapImage x:Key="EnabledIcon" UriSource="../resources/enabled.png"/>
+    <BitmapImage x:Key="DisabledIcon" UriSource="../resources/disabled.png"/>
+    <BitmapImage x:Key="NoopIcon" UriSource="../resources/noop.png"/>
+    <BitmapImage x:Key="ClickIcon" UriSource="../resources/click.png"/>
+    <BitmapImage x:Key="WheelIcon" UriSource="../resources/wheel.png"/>
+    <BitmapImage x:Key="KeyPressIcon" UriSource="../resources/keypress.png"/>
+    <BitmapImage x:Key="DoubleClickIcon" UriSource="../resources/dblclk.png"/>
+    <BitmapImage x:Key="AbsIcon" UriSource="../resources/abs.png"/>
+    <BitmapImage x:Key="RelIcon" UriSource="../resources/rel.png"/>
+    <BitmapImage x:Key="WaitIcon" UriSource="../resources/wait.png"/>
+    <BitmapImage x:Key="SkipIcon" UriSource="../resources/skip.png"/>
+
+
+    <BitmapImage x:Key="FoldUpIcon" UriSource="../resources/fold.png"/>
+
+
+    <TransformedBitmap x:Key="FoldDownIcon" Source="../resources/fold.png" >
+        <TransformedBitmap.Transform>
+            <RotateTransform Angle="180"/>
+        </TransformedBitmap.Transform>
+    </TransformedBitmap>
+    <TransformedBitmap x:Key="FoldToLeftIcon" Source="../resources/fold.png" >
+        <TransformedBitmap.Transform>
+            <RotateTransform Angle="-90"/>
+        </TransformedBitmap.Transform>
+    </TransformedBitmap>
+    <TransformedBitmap x:Key="FoldToRightIcon" Source="../resources/fold.png" >
+        <TransformedBitmap.Transform>
+            <RotateTransform Angle="90"/>
+        </TransformedBitmap.Transform>
+    </TransformedBitmap>
+
+    <ControlTemplate x:Key="BtnTemplate"  TargetType="Button">
+        <Border 
+            Background="{TemplateBinding Background}"
+            CornerRadius="3" 
+            Padding="{TemplateBinding Padding}"
+            Margin="0,0,4,0"
+            x:Name="border"
+            BorderBrush="{TemplateBinding BorderBrush}"
+            BorderThickness="{TemplateBinding BorderThickness}"
+            >
+
+            <VisualStateManager.VisualStateGroups>
+                <VisualStateGroup x:Name="CommonStates">
+                    <VisualState x:Name="Normal"/>
+                    <VisualState x:Name="MouseOver">
+                        <Storyboard>
+                            <ColorAnimation Storyboard.TargetName="border"
+                                  Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
+                                  To="#FFFFFF8E" Duration="0:0:0.2"/>
+                        </Storyboard>
+                    </VisualState>
+                    
+                    <VisualState x:Name="Pressed">
+                        <Storyboard>
+                            <ColorAnimation Storyboard.TargetName="border"
+                                    Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
+                                    To="#FF80FF96" Duration="0"/>
+                        </Storyboard>
+                    </VisualState>
+
+                    <VisualStateGroup.Transitions>
+                        <VisualTransition From="Pressed" GeneratedDuration="0:0:0.2"/>
+                    </VisualStateGroup.Transitions>
+                </VisualStateGroup>
+            </VisualStateManager.VisualStateGroups>
+            <ContentPresenter 
+                VerticalAlignment="Center" 
+                HorizontalAlignment="Center"/>
+        </Border>
+    </ControlTemplate>
+
+    <Style TargetType="Button">
+        <Setter Property="Background" Value="White"/>
+        <Setter Property="Template" Value="{StaticResource BtnTemplate}"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="Focusable" Value="False"/>
+    </Style>
+
+    <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}" x:Key="NorButton">
+        <Setter Property="Background" Value="{StaticResource ButtonBg}"/>
+        <Setter Property="Padding" Value="4"/>
+    </Style>
+
+    <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}" x:Key="OkButton">
+        <Setter Property="Background" Value="#FFACFF9E"/>
+        <Setter Property="Padding" Value="4"/>
+    </Style>
+
+    <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}" x:Key="CancelButton">
+        <Setter Property="Background" Value="#FFFFECEC"/>
+        <Setter Property="Padding" Value="4"/>
+    </Style>
+
+    <Style TargetType="Button" BasedOn="{StaticResource NorButton}" x:Key="StrongButton">
+        <Setter Property="Background" Value="#FFC8FDE7"/>
+        <Setter Property="BorderBrush" Value="#FF00DED4"/>
+        <Setter Property="BorderThickness" Value="3"/>
+    </Style>
+
+    <!-- Menu Button のスタイル-->
+    <Style x:Key="MenuButton" TargetType="{x:Type ToggleButton}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ToggleButton}">
+                    <Border x:Name="border" 
+                            Padding="2" 
+                            CornerRadius="3" 
+                            Background="#00FFFFFF" 
+                            BorderThickness="0" 
+                            SnapsToDevicePixels="True">
+                        <ContentPresenter />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsChecked" Value="true">
+                            <Setter Property="Background" 
+                                    TargetName="border" 
+                                    Value="#20FFFFFF"/>
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="true">
+                            <Setter Property="Background" 
+                                    TargetName="border" 
+                                    Value="#30FFFFFF"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+
+    <!-- Registration Button のスタイル-->
+    <Style TargetType="RadioButton" BasedOn="{StaticResource {x:Type ToggleButton}}" x:Key="RadioToggle">
+        <Setter Property="Background" Value="#FFF5F0FF"/>
+    </Style>
+    <Style TargetType="TextBlock" x:Key="RadioToggleText">
+        <Setter Property="FontFamily" Value="Arial Black"/>
+        <Setter Property="Foreground" Value="#FF541099"/>
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding IsRegistered}" Value="false">
+                <Setter Property="Foreground" Value="#FFDFB9FF"/>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
+    <ObjectDataProvider x:Key="KeyTypes" MethodName="GetValues" 
+                            ObjectType="{x:Type system:Enum}">
+        <ObjectDataProvider.MethodParameters>
+            <x:Type TypeName="model:KeyType"/>
+        </ObjectDataProvider.MethodParameters>
+    </ObjectDataProvider>
+
+
+</ResourceDictionary>

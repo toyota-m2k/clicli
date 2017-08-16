@@ -1,0 +1,74 @@
+﻿<UserControl x:Class="CliCliBoy.view.GetPositionPanel"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:CliCliBoy"
+             xmlns:view="clr-namespace:CliCliBoy.view"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <UserControl.Resources>
+        <ResourceDictionary Source="CommonResource.xaml"/>
+    </UserControl.Resources>
+    <Grid>
+        <StackPanel x:Name="GetPositionMain" VerticalAlignment="Center" HorizontalAlignment="Center" >
+            <TextBlock FontWeight="Bold" TextWrapping="Wrap" TextAlignment="Center">
+                    Move mouse to target point, <LineBreak/>and press 'A' key or '+' key in numeric pad.
+            </TextBlock>
+
+            <CheckBox x:Name="GPTChk" HorizontalAlignment="Center" Margin="0,20,0,0" Checked="CheckBox_Checked" Unchecked="CheckBox_Unchecked">
+                <TextBlock Text="{Binding RemainSec, StringFormat='get position after {0} seconds.'}"/>
+            </CheckBox>
+
+            <Grid HorizontalAlignment="Center" Visibility="{Binding EnableRatio, Converter={StaticResource BoolToVisibility}}" Margin="0,20,0,0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <StackPanel Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,5,0,15">
+                    <TextBlock VerticalAlignment="Center">
+                        <TextBlock.Text>
+                            <MultiBinding StringFormat="Based at ({0},{1})">
+                                <Binding Path="OrgPoint.X" />
+                                <Binding Path="OrgPoint.Y" />
+                            </MultiBinding>
+                        </TextBlock.Text>
+                    </TextBlock>
+                    <Button Style="{StaticResource NorButton}" Content="Show Pos." Margin="5,0,0,0" Padding="8,2" Click="Btn_ShowPos"/>
+                    <Button Style="{StaticResource NorButton}" Content="Adjust" Margin="5,0,0,0" Padding="8,2" Click="Btn_Adjust"/>
+                </StackPanel>
+
+                <TextBlock Grid.Row="1" Grid.Column="0" Text="Exp.Ratio" Margin="0,0,10,0"/>
+                <local:NumericTextBox x:Name="RatioEdit" Grid.Row="1" Grid.Column="1" Text="{Binding Ratio}" />
+                <TextBlock Grid.Row="1" Grid.Column="2" Text="%" HorizontalAlignment="Center"/>
+
+                <StackPanel Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Center">
+                    <Button Content="100" Width="35" Style="{StaticResource NorButton}" Margin="0,5,2,0" Click="PresetRatio_Click"/>
+                    <Button Content="90" Width="35" Style="{StaticResource NorButton}" Margin="0,5,2,0" Click="PresetRatio_Click"/>
+                    <Button Content="75" Width="35" Style="{StaticResource NorButton}" Margin="0,5,2,0" Click="PresetRatio_Click"/>
+                    <Button Content="67" Width="35" Style="{StaticResource NorButton}" Margin="0,5,2,0" Click="PresetRatio_Click"/>
+                    <Button Content="50" Width="35" Style="{StaticResource NorButton}" Margin="0,5,2,0" Click="PresetRatio_Click"/>
+                </StackPanel>
+
+            </Grid>
+
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <Button Content="OK" Width="80" Margin="5,20,5,0" Click="OkButton_Click" Style="{StaticResource OkButton}" Visibility="{Binding EnableRatio, Converter={StaticResource BoolToVisibility}}"/>
+                <Button Content="Cancel" Width="80" Margin="5,20,5,0" Click="CancelButton_Click" Style="{StaticResource CancelButton}"/>
+            </StackPanel>
+
+        </StackPanel>
+
+        <Grid x:Name="GetPositionSub" Visibility="Hidden">
+            <view:PositionTuner x:Name="PositionTuner"/>
+        </Grid>
+
+
+    </Grid>
+</UserControl>

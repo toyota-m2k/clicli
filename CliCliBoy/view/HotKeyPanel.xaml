@@ -1,0 +1,84 @@
+﻿<UserControl x:Class="CliCliBoy.view.HotKeyPanel"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="340" d:DesignWidth="300">
+    <UserControl.Resources>
+        <ResourceDictionary Source="CommonResource.xaml"/>
+    </UserControl.Resources>
+    <Grid Width="250">
+        <StackPanel Orientation="Vertical" HorizontalAlignment="Stretch">
+            <TextBlock Text="HotKey for Start/Stop" Background="{StaticResource DlgTitleBg}" Padding="5"/>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="20"/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <RadioButton Grid.Row="0" Grid.Column="1" Content="None" Margin="0, 5" IsChecked="{Binding HotKey, Converter={StaticResource EnumBooleanConverter}, ConverterParameter=HK_NONE, Mode=TwoWay}" GroupName="HotKey"/>
+                <TextBlock Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="5" Text="NUMPAD" Padding="5" Margin="0, 5"/>
+
+                <RadioButton Grid.Row="2" Grid.Column="2" Content="/" Margin="0, 5" IsChecked="{Binding HotKey, Converter={StaticResource EnumBooleanConverter}, ConverterParameter=HK_DIV, Mode=TwoWay}" GroupName="HotKey"/>
+                <RadioButton Grid.Row="2" Grid.Column="3" Content="*" Margin="0, 5" IsChecked="{Binding HotKey, Converter={StaticResource EnumBooleanConverter}, ConverterParameter=HK_MUL, Mode=TwoWay}" GroupName="HotKey"/>
+                <RadioButton Grid.Row="2" Grid.Column="4" Content="-" Margin="0, 5" IsChecked="{Binding HotKey, Converter={StaticResource EnumBooleanConverter}, ConverterParameter=HK_SUB, Mode=TwoWay}" GroupName="HotKey"/>
+
+                <RadioButton Grid.Row="3" Grid.Column="1" Content="7" Margin="0, 5" IsChecked="{Binding HotKey, Converter={StaticResource EnumBooleanConverter}, ConverterParameter=HK7}" GroupName="HotKey"/>
+                <RadioButton Grid.Row="3" Grid.Column="2" Content="8" Margin="0, 5" IsChecked="{Binding HotKey, Converter={StaticResource EnumBooleanConverter}, ConverterParameter=HK8}" GroupName="HotKey"/>
+                <RadioButton Grid.Row="3" Grid.Column="3" Content="9" Margin="0, 5" IsChecked="{Binding HotKey, Converter={StaticResource EnumBooleanConverter}, ConverterParameter=HK9}" GroupName="HotKey"/>
+                <RadioButton Grid.Row="3" Grid.Column="4" Content="+" Margin="0, 5" IsChecked="{Binding HotKey, Converter={StaticResource EnumBooleanConverter}, ConverterParameter=HK_PLS}" GroupName="HotKey"/>
+
+                <RadioButton Grid.Row="4" Grid.Column="1" Content="4" Margin="0, 5" IsChecked="{Binding HotKey, Converter={StaticResource EnumBooleanConverter}, ConverterParameter=HK4}" GroupName="HotKey"/>
+                <RadioButton Grid.Row="4" Grid.Column="2" Content="5" Margin="0, 5" IsChecked="{Binding HotKey, Converter={StaticResource EnumBooleanConverter}, ConverterParameter=HK5}" GroupName="HotKey"/>
+                <RadioButton Grid.Row="4" Grid.Column="3" Content="6" Margin="0, 5" IsChecked="{Binding HotKey, Converter={StaticResource EnumBooleanConverter}, ConverterParameter=HK6}" GroupName="HotKey"/>
+
+                <RadioButton Grid.Row="5" Grid.Column="1" Content="1" Margin="0, 5" IsChecked="{Binding HotKey, Converter={StaticResource EnumBooleanConverter}, ConverterParameter=HK1}" GroupName="HotKey"/>
+                <RadioButton Grid.Row="5" Grid.Column="2" Content="2" Margin="0, 5" IsChecked="{Binding HotKey, Converter={StaticResource EnumBooleanConverter}, ConverterParameter=HK2}" GroupName="HotKey"/>
+                <RadioButton Grid.Row="5" Grid.Column="3" Content="3" Margin="0, 5" IsChecked="{Binding HotKey, Converter={StaticResource EnumBooleanConverter}, ConverterParameter=HK3}" GroupName="HotKey"/>
+
+                <RadioButton Grid.Row="6" Grid.Column="1" Content="0" Margin="0, 5" IsChecked="{Binding HotKey, Converter={StaticResource EnumBooleanConverter}, ConverterParameter=HK0, Mode=TwoWay}" GroupName="HotKey"/>
+                <RadioButton Grid.Row="6" Grid.Column="3" Content="." Margin="0, 5" IsChecked="{Binding HotKey, Converter={StaticResource EnumBooleanConverter}, ConverterParameter=HK_DOT}" GroupName="HotKey"/>
+
+                <TextBlock Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="5" Text="Cursor" Padding="5" Margin="0, 5"/>
+                <RadioButton Grid.Row="8" Grid.Column="1" Content="Home" Margin="0, 5" IsChecked="{Binding HotKey, Converter={StaticResource EnumBooleanConverter}, ConverterParameter=HK_HOME}" GroupName="HotKey"/>
+                <RadioButton Grid.Row="9" Grid.Column="1" Content="End" Margin="0, 5" IsChecked="{Binding HotKey, Converter={StaticResource EnumBooleanConverter}, ConverterParameter=HK_END}" GroupName="HotKey"/>
+                <RadioButton Grid.Row="8" Grid.Column="2" Content="PgUp" Margin="0, 5" IsChecked="{Binding HotKey, Converter={StaticResource EnumBooleanConverter}, ConverterParameter=HK_PGUP}" GroupName="HotKey"/>
+                <RadioButton Grid.Row="9" Grid.Column="2" Content="PgDn" Margin="0, 5" IsChecked="{Binding HotKey, Converter={StaticResource EnumBooleanConverter}, ConverterParameter=HK_PGDN}" GroupName="HotKey"/>
+
+                <StackPanel Grid.Row="10" Grid.Column="0" Grid.ColumnSpan="5" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,15,0,5">
+                    <Button Content="OK" Width="80" IsDefault="True" Margin="0,0,10,0" VerticalAlignment="Bottom" Click="Button_Ok" Style="{StaticResource OkButton}"/>
+                    <Button Content="Cancel" Width="80" IsCancel="True" VerticalAlignment="Top" Click="Button_Cancel" Style="{StaticResource CancelButton}"/>
+                </StackPanel>
+
+            </Grid>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="20"/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+            </Grid>
+
+
+        </StackPanel>
+        
+    </Grid>
+</UserControl>
