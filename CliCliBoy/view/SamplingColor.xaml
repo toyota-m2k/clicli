@@ -62,7 +62,7 @@
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
                         <TextBlock Text="Sampling Size" Margin="0,0,10,0"/>
-                        <local:NumericTextBox Width="40" Text="{Binding SamplingInflation}"/>
+                        <local:NumericTextBox Width="40" Text="{Binding SamplingInflation, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" Margin="0,5,0,0" VerticalAlignment="Center">
                         <Button Style="{StaticResource NorButton}" Content="Sampling" Click="Btn_SampleNow" PreviewMouseDown="Btn_SamplingDown" PreviewMouseUp="Btn_SamplingUp"/>
