@@ -24,7 +24,7 @@ namespace CliCliBoy.model
             }
         }
 
-        public List<string> MRU { get; set; }
+        public List<string> MRU { get; set; } = new List<string>(12);
 
         public void AddMru(string path)
         {

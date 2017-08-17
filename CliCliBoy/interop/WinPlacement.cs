@@ -12,6 +12,26 @@ namespace CliCliBoy.interop
     public class WinPlacement
     {
         #region Win32データ型
+        private static bool pre_equals(object me, object p)
+        {
+            // If parameter is null, return false.
+            if (Object.ReferenceEquals(p, null))
+            {
+                return false;
+            }
+
+            // Optimization for a common success case.
+            if (Object.ReferenceEquals(me, p))
+            {
+                return true;
+            }
+            // If run-time types are not exactly the same, return false.
+            if (me.GetType() != p.GetType())
+            {
+                return false;
+            }
+            return true;
+        }
 
         [Serializable]
         [StructLayout(LayoutKind.Sequential)]
@@ -30,10 +50,21 @@ namespace CliCliBoy.interop
                 this.Bottom = bottom;
             }
 
-            public bool Equals(RECT s)
+            public override bool Equals(object p)
             {
+                if(!pre_equals(this, p))
+                {
+                    return false;
+                }
+                RECT s = (RECT)p;
                 return s.Left == Left && s.Right == Right && s.Top == Top && s.Bottom == Bottom;
             }
+
+            //public bool Equals(RECT s)
+            //{
+            //    return s.Left == Left && s.Right == Right && s.Top == Top && s.Bottom == Bottom;
+            //}
+
 
             public static bool operator==(RECT r0, RECT r1)
             {
@@ -42,6 +73,12 @@ namespace CliCliBoy.interop
             public static bool operator !=(RECT r0, RECT r1)
             {
                 return !r0.Equals(r1);
+            }
+
+            public override int GetHashCode()
+            {
+                // どうせ使わないから
+                return base.GetHashCode();
             }
         }
 
@@ -58,8 +95,13 @@ namespace CliCliBoy.interop
                 this.X = x;
                 this.Y = y;
             }
-            public bool Equals(POINT s)
+            public override bool Equals(object obj)
             {
+                if (!pre_equals(this, obj))
+                {
+                    return false;
+                }
+                POINT s = (POINT)obj;
                 return s.X == X && s.Y == Y;
             }
 
@@ -70,6 +112,12 @@ namespace CliCliBoy.interop
             public static bool operator !=(POINT r0, POINT r1)
             {
                 return !r0.Equals(r1);
+            }
+
+            public override int GetHashCode()
+            {
+                // どうせ使わないから
+                return base.GetHashCode();
             }
 
         }
@@ -86,15 +134,20 @@ namespace CliCliBoy.interop
             public POINT maxPosition;
             public RECT normalPosition;
 
-            public bool Equals(WINDOWPLACEMENT s)
+            public override bool Equals(object obj)
             {
-                return
-                    s.flags == flags &&
-                    s.showCmd == showCmd &&
-                    s.minPosition == minPosition &&
-                    s.maxPosition == maxPosition &&
-                    s.normalPosition == normalPosition;
+                if (!pre_equals(this, obj))
+                {
+                    return false;
+                }
+                WINDOWPLACEMENT s = (WINDOWPLACEMENT)obj;
+                return  s.flags          == flags &&
+                        s.showCmd        == showCmd &&
+                        s.minPosition    == minPosition &&
+                        s.maxPosition    == maxPosition &&
+                        s.normalPosition == normalPosition;
             }
+
             public static bool operator ==(WINDOWPLACEMENT r0, WINDOWPLACEMENT r1)
             {
                 return r0.Equals(r1);
@@ -102,6 +155,11 @@ namespace CliCliBoy.interop
             public static bool operator !=(WINDOWPLACEMENT r0, WINDOWPLACEMENT r1)
             {
                 return !r0.Equals(r1);
+            }
+
+            public override int GetHashCode()
+            {
+                return base.GetHashCode();
             }
         }
         #endregion

@@ -881,7 +881,7 @@ namespace CliCliBoy
                     }
                     catch (Exception ex)
                     {
-                        Debug.WriteLine(e);
+                        Debug.WriteLine(ex);
                     }
                     finally
                     {

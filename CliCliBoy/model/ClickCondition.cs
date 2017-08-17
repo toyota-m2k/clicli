@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -173,6 +174,7 @@ namespace CliCliBoy.model
             }
             catch (Win32Exception ex)
             {
+                Debug.WriteLine(ex.ToString());
                 return false;
             }
         }

@@ -25,7 +25,6 @@ namespace CliCliBoy
             }
         }
 
-        private string mDataFilePath;
         public string DataFilePath { get; set; }
         public string SettingFilePath { get; set; }
 
