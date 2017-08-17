@@ -72,57 +72,69 @@ namespace CliCliBoy.model
     {
         public override void AddValue(float value)
         {
-            if(Min==float.MaxValue || Max==Min )
-            {
-                // 最初の１つ目 or ２つ目
-                base.AddValue(value);
-            }
-            else
-            {
-                // ３つ目以降
-                if (Max - Min <= 180f)
+            //try
+            //{
+                if (Min == float.MaxValue || Max == Min)
                 {
-                    if(value < Min)
-                    {
-                        Min = value;
-                    }
-                    else if(Max<value)
-                    {
-                        Max = value;
-                    }
-                    else
-                    {
-                        return;
-                    }
+                    // 最初の１つ目 or ２つ目
+                    base.AddValue(value);
                 }
                 else
                 {
-                    var d = Min + 360f - Max;
-                    //var min = 0; // Max - Max;
-                    var v = value - Max;
-                    if(v<0)
+                    // ３つ目以降
+                    if (Max - Min <= 180f)
                     {
-                        v += 360f;
-                    }
-
-                    if( v>d )
-                    {
-                        if(v+d<180)
+                        if( value - Max > 180f)
+                        {
+                            Min = Max;
+                            Max = value;
+                        }
+                        else if (value < Min)
                         {
                             Min = value;
                         }
-                        else
+                        else if (Max < value)
                         {
                             Max = value;
                         }
-                        Debug.Assert(Max >= Min);
+                        else
+                        {
+                            return;
+                        }
                     }
                     else
                     {
-                        return;
+                        var d = Min + 360f - Max;
+                        //var min = 0; // Max - Max;
+                        var v = value - Max;
+                        if (v < 0)
+                        {
+                            v += 360f;
+                        }
+
+                        if (v > d)
+                        {
+                            if (v + d < 180)
+                            {
+                                Min = value;
+                            }
+                            else
+                            {
+                                Max = value;
+                            }
+                            Debug.Assert(Max >= Min);
+                        }
+                        else
+                        {
+                            return;
+                        }
                     }
                 }
-            }
+            //}
+            //finally
+            //{
+            //    Debug.WriteLine("AngleRange Add: {0} --> Min={1}, Max={2}", value, Min, Max);
+            //}
         }
 
 
