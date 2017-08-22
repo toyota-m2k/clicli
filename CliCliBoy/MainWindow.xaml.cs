@@ -1221,5 +1221,23 @@ namespace CliCliBoy
 
             }
         }
+
+        private void BtnTestAll_Click(object sender, RoutedEventArgs e)
+        {
+            mContext.PlayStop();
+            var sb = new StringBuilder();
+            TargetListView.SelectedItems.Clear();
+            foreach( TargetItem item in TargetListView.Items)
+            {
+                if(item.Condition.Type != ClickCondition.ConditionType.NONE)
+                {
+                    if(item.Condition.Decide(sb))
+                    {
+                        TargetListView.SelectedItems.Add(item);
+                    }
+                }
+            }
+            DebugOutput.Text = sb.ToString();
+        }
     }
 }

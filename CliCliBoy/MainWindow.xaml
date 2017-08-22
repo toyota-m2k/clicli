@@ -381,7 +381,12 @@
                             <Image Source="{StaticResource DownIcon}"/>
                         </Button>
                         </StackPanel>
-                        <CheckBox Content="Check Mode" Foreground="White" VerticalAlignment="Center" IsChecked="{Binding CheckMode}" x:Name="checkMode" Checked="checkMode_Checked" Unchecked="checkMode_Unchecked"/>
+                        <StackPanel VerticalAlignment="Center" Orientation="Vertical">
+                            <CheckBox Content="Check Mode" Foreground="White" IsChecked="{Binding CheckMode}" x:Name="checkMode" Checked="checkMode_Checked" Unchecked="checkMode_Unchecked"/>
+                            <Button Margin="0,6,0,0" Click="BtnTestAll_Click">
+                                <TextBlock>Test All</TextBlock>
+                            </Button>
+                        </StackPanel>
 
                         <!--<Button x:Name="BtnStart" Content="Start" Height="{StaticResource ToolBtnHeight}" Width="{StaticResource ToolBtnWidth}" Cursor="Hand" Margin="{StaticResource ToolBtnSpMargin}" Click="BtnStart_Click"/>
                         <Button x:Name="BtnPause" Content="Pause" Height="{StaticResource ToolBtnHeight}" Width="{StaticResource ToolBtnWidth}" Cursor="Hand" Margin="{StaticResource ToolBtnMargin}" Click="BtnPause_Click"/>
