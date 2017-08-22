@@ -25,6 +25,7 @@ namespace CliCliBoy.model
             Project mProject;
             int mIndex;
             int mTargetRepeat;
+            int mNextWait;
             int mRepeat;
             bool mPlaying;
             WeakReference<PlayerList> mParent;
@@ -95,79 +96,89 @@ namespace CliCliBoy.model
             }
 
 
-            private void retryAfter()
-            {
-                mTimer.Interval = new TimeSpan(0, 0, 0, 0, 500);    // 5msec
-                mTimer.Start();
-            }
-
             /**
              * TargetItemの実行条件(Condition)をチェックする
-             * @param item    次に実行する予定のターゲット
-             * @return        条件チェック＆スキップを行った結果、実際に実行することになったターゲット
-             *                null なら実行せずに処理を保留（次のタイミングでもう一度実行判断、または、処理終了）
+             * @param item    in  次に実行する予定のターゲット
+             *                out 条件チェック＆スキップを行った結果、実際に実行することになったターゲット
+             *                    null なら実行せずに処理を保留（次のタイミングでもう一度実行判断、または、処理終了）
+             * @return        true: 処理継続可 / false: 処理終了
              * 
              */
-            private TargetItem checkCondition(TargetItem item)
+            private bool checkCondition(ref TargetItem item)
             {
                 var startItem = item;
                 while (true)
                 {
                     if (item.Condition.Type == ClickCondition.ConditionType.NONE)
                     {
-                        return item;
+                        return true;
                     }
 
                     if (item.Condition.Decide())
                     {
-                        return item;
+                        return true;
                     }
 
                     if (item.Condition.Type == ClickCondition.ConditionType.WAIT)
                     {
-                        retryAfter();
-                        return null;
+                        //retryAfter();
+                        item = null;
+                        return true;
                     }
                     else
                     {
                         //return true;    // skip
                         if (!next())
                         {
-                            Stop();
-                            return null;
+                            //Stop();
+                            return false;
                         }
                         item = mProject.Targets[mIndex];
                         if (item == startItem)
                         {
                             // 一巡した
-                            retryAfter();
-                            return null;
+                            item = null;
+                            return true;
                         }
                     }
                 }
             }
 
-            private bool doit(TargetItem item)
+            private const int MIN_WAIT = 500;
+
+            enum ActionResult {
+                DONE,
+                WAITING,
+                EXIT
+            }
+            private ActionResult doit(TargetItem item)
             {
-                item = checkCondition(item);
+                mNextWait = 0;
+                if(!checkCondition(ref item))
+                {
+                    // 終了
+                    return ActionResult.EXIT;
+                }
                 if(null==item)
                 {
-                    return false;
+                    // 保留
+                    return ActionResult.WAITING;
                 }
 
                 if (isReady())
                 {
+                    mNextWait = item.Wait;
                     onTargeted(item);
                     if (item.Type == ClickType.NOOP)
                     {
-                        return true;
+                        return ActionResult.DONE;
                     }
                     else if (item.Type == ClickType.CLICK || item.Type == ClickType.DBLCLK)
                     {
                         if (interop.MouseEmulator.ClickAt(item.Clicker.ClickPoint, isReady, item.Type == ClickType.DBLCLK))
                         {
                             onClicked(item);
-                            return true;
+                            return ActionResult.DONE;
                         }
                     }
                     else if (item.Type == ClickType.WHEEL)
@@ -175,7 +186,7 @@ namespace CliCliBoy.model
                         if (interop.MouseEmulator.WheelAt(item.Clicker.ClickPoint, item.WheelAmount, isReady))
                         {
                             onClicked(item);
-                            return true;
+                            return ActionResult.DONE;
                         }
                     }
                     else if (item.Type == ClickType.KEYPRESS)
@@ -183,13 +194,11 @@ namespace CliCliBoy.model
                         if (interop.MouseEmulator.PressKey((int)item.PressKey, isReady))
                         {
                             onClicked(item);
-                            return true;
+                            return ActionResult.DONE;
                         }
                     }
                 }
-                // Special Keys 押下中は、NOOPやConditional Skipも処理を待機する。
-                retryAfter();
-                return false;
+                return ActionResult.WAITING;
             }
 
             private void doAction()
@@ -197,13 +206,24 @@ namespace CliCliBoy.model
                 StopTimer();
 
                 TargetItem item = mProject.Targets[mIndex];
-                if (!doit(item))
+                switch(doit(item))
                 {
-                    // try again later.
-                    return;
+                    case ActionResult.DONE:
+                        if (!next())
+                        {
+                            Stop();
+                            return;
+                        }
+                        break;
+                    case ActionResult.EXIT:
+                        Stop();
+                        return;
+                    case ActionResult.WAITING:
+                        break;
                 }
 
-                prepare();
+                mTimer.Interval = new TimeSpan(0, 0, 0, 0, Math.Max(mNextWait, MIN_WAIT));
+                mTimer.Start();
             }
 
             //private bool check()
@@ -278,19 +298,6 @@ namespace CliCliBoy.model
                 return true;
             }
 
-            private void prepare()
-            {
-                if (!next())
-                {
-                    Stop();
-                    return;
-                }
-
-                TargetItem item = mProject.Targets[mIndex];
-                //onTargeted(item);
-                mTimer.Interval = new TimeSpan(0, 0, 0, 0, item.Wait);
-                mTimer.Start();
-            }
 
             public void StopTimer()
             {
@@ -310,13 +317,19 @@ namespace CliCliBoy.model
                 mIndex = -1;
                 mTargetRepeat = 0;
                 mRepeat = 0;
+                mNextWait = 0;
 
+                if (!next())
+                {
+                    return;
+                }
 
                 StopTimer();
                 mPlaying = true;
                 onStart();
-                
-                prepare();
+
+                mTimer.Interval = new TimeSpan(0, 0, 0, 0, MIN_WAIT);
+                mTimer.Start();
             }
 
             public void StartFrom(int index)
@@ -329,6 +342,7 @@ namespace CliCliBoy.model
                 mIndex = index;
                 mTargetRepeat = 0;
                 mRepeat = 0;
+                mNextWait = 0;
 
 
                 StopTimer();
@@ -337,7 +351,7 @@ namespace CliCliBoy.model
 
                 TargetItem item = mProject.Targets[mIndex];
                 onTargeted(item);
-                mTimer.Interval = new TimeSpan(0, 0, 0, 0, item.Wait);
+                mTimer.Interval = new TimeSpan(0, 0, 0, 0, MIN_WAIT);
                 mTimer.Start();
             }
 
