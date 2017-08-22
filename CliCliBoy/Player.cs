@@ -94,61 +94,101 @@ namespace CliCliBoy.model
                 return !KeyState.CheckSpecialKeyDown();
             }
 
-            private bool doit(TargetItem item)
+
+            private void retryAfter()
             {
-
-                bool wait = wait = !isReady();  // Special Keys 押下中は、NOOPやConditional Skipも処理を待機する。
-
-                if (!wait && item.Condition.Type != ClickCondition.ConditionType.NONE)
-                {
-                    if (!item.Condition.Decide())
-                    {
-                        if (item.Condition.Type == ClickCondition.ConditionType.WAIT)
-                        {
-                            wait = true;    // wait and try again.
-                        }
-                        else
-                        {
-                            return true;    // skip
-                        }
-                    }
-                }
-
-                if (wait)
-                {
-                    // nothing to do... fall through to retry.
-                }
-                else if (item.Type == ClickType.NOOP)
-                {
-                    return true;
-                }
-                else if (item.Type == ClickType.CLICK || item.Type == ClickType.DBLCLK)
-                {
-                    if (interop.MouseEmulator.ClickAt(item.Clicker.ClickPoint, isReady, item.Type == ClickType.DBLCLK))
-                    {
-                        onClicked(item);
-                        return true;
-                    }
-                }
-                else if (item.Type == ClickType.WHEEL)
-                {
-                    if (interop.MouseEmulator.WheelAt(item.Clicker.ClickPoint, item.WheelAmount, isReady))
-                    {
-                        onClicked(item);
-                        return true;
-                    }
-                }
-                else if (item.Type == ClickType.KEYPRESS)
-                {
-                    if (interop.MouseEmulator.PressKey((int)item.PressKey, isReady))
-                    {
-                        onClicked(item);
-                        return true;
-                    }
-                }
-                // busy --> retry after 500 msec
                 mTimer.Interval = new TimeSpan(0, 0, 0, 0, 500);    // 5msec
                 mTimer.Start();
+            }
+
+            /**
+             * TargetItemの実行条件(Condition)をチェックする
+             * @param item    次に実行する予定のターゲット
+             * @return        条件チェック＆スキップを行った結果、実際に実行することになったターゲット
+             *                null なら実行せずに処理を保留（次のタイミングでもう一度実行判断、または、処理終了）
+             * 
+             */
+            private TargetItem checkCondition(TargetItem item)
+            {
+                var startItem = item;
+                while (true)
+                {
+                    if (item.Condition.Type == ClickCondition.ConditionType.NONE)
+                    {
+                        return item;
+                    }
+
+                    if (item.Condition.Decide())
+                    {
+                        return item;
+                    }
+
+                    if (item.Condition.Type == ClickCondition.ConditionType.WAIT)
+                    {
+                        retryAfter();
+                        return null;
+                    }
+                    else
+                    {
+                        //return true;    // skip
+                        if (!next())
+                        {
+                            Stop();
+                            return null;
+                        }
+                        item = mProject.Targets[mIndex];
+                        if (item == startItem)
+                        {
+                            // 一巡した
+                            retryAfter();
+                            return null;
+                        }
+                    }
+                }
+            }
+
+            private bool doit(TargetItem item)
+            {
+                item = checkCondition(item);
+                if(null==item)
+                {
+                    return false;
+                }
+
+                if (isReady())
+                {
+                    onTargeted(item);
+                    if (item.Type == ClickType.NOOP)
+                    {
+                        return true;
+                    }
+                    else if (item.Type == ClickType.CLICK || item.Type == ClickType.DBLCLK)
+                    {
+                        if (interop.MouseEmulator.ClickAt(item.Clicker.ClickPoint, isReady, item.Type == ClickType.DBLCLK))
+                        {
+                            onClicked(item);
+                            return true;
+                        }
+                    }
+                    else if (item.Type == ClickType.WHEEL)
+                    {
+                        if (interop.MouseEmulator.WheelAt(item.Clicker.ClickPoint, item.WheelAmount, isReady))
+                        {
+                            onClicked(item);
+                            return true;
+                        }
+                    }
+                    else if (item.Type == ClickType.KEYPRESS)
+                    {
+                        if (interop.MouseEmulator.PressKey((int)item.PressKey, isReady))
+                        {
+                            onClicked(item);
+                            return true;
+                        }
+                    }
+                }
+                // Special Keys 押下中は、NOOPやConditional Skipも処理を待機する。
+                retryAfter();
                 return false;
             }
 
@@ -247,7 +287,7 @@ namespace CliCliBoy.model
                 }
 
                 TargetItem item = mProject.Targets[mIndex];
-                onTargeted(item);
+                //onTargeted(item);
                 mTimer.Interval = new TimeSpan(0, 0, 0, 0, item.Wait);
                 mTimer.Start();
             }
