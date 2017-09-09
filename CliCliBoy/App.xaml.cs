@@ -10,6 +10,12 @@ using System.Windows;
 
 namespace CliCliBoy
 {
+    public interface Logger
+    {
+        void Output(string msg);
+    }
+
+
     public class Globals
     {
         private static Globals mInstance;
@@ -32,6 +38,21 @@ namespace CliCliBoy
 
         public Settings Settings { get; set; }
 
+
+        private class NoopLogger : Logger
+        {
+            public void Output(string msg)
+            {
+                Debug.WriteLine(msg);
+            }
+        }
+        private static Logger mDefaultLogger = new NoopLogger();
+        private static Logger mLogger = null;
+        public static Logger Logger
+        {
+            get { return (null == mLogger) ? mDefaultLogger : mLogger; }
+            set { mLogger = value; }
+        }
         /**
          * コンストラクタ（シングルトンなのでprivate）
          */

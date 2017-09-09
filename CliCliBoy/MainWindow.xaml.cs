@@ -30,7 +30,7 @@ namespace CliCliBoy
     /// <summary>
     /// MainWindow.xaml の相互作用ロジック
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : Window, Logger
     {
         /**
          * ビューの状態
@@ -759,6 +759,15 @@ namespace CliCliBoy
             }
         }
 
+        public void Output(string msg)
+        {
+            Debug.WriteLine(msg);
+            StringBuilder sb = new StringBuilder(DebugOutput.Text);
+            sb.AppendLine(msg);
+            DebugOutput.Text = sb.ToString();
+            DebugOutput.ScrollToEnd();
+        }
+
         /**
          * キー操作/SCメニュー用コマンド定義
          */
@@ -1075,10 +1084,12 @@ namespace CliCliBoy
         private void checkMode_Checked(object sender, RoutedEventArgs e)
         {
             TargetGrid.RowDefinitions[2].Height = new GridLength(mDebugOutputHeight);
+            Globals.Logger = this;
         }
 
         private void checkMode_Unchecked(object sender, RoutedEventArgs e)
         {
+            Globals.Logger = null;
             var v = TargetGrid.RowDefinitions[2].Height.Value;
             if(v>0)
             {

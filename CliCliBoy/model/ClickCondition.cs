@@ -177,6 +177,13 @@ namespace CliCliBoy.model
                 Debug.WriteLine(ex.ToString());
                 return false;
             }
+            catch(Exception e2)
+            {
+                //Debug.WriteLine(e2.ToString());
+                Globals.Logger.Output(e2.ToString());
+                Globals.Logger.Output(absPoint.ToString());
+                return false;
+            }
         }
     }
 }
