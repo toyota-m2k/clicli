@@ -273,15 +273,18 @@ namespace CliCliBoy.view
             {
                 mSamplingContext.Condition.ColorRange.Clear();
             }
-            Bitmap myBitmap = new Bitmap(sz, sz);
-            Graphics g = Graphics.FromImage(myBitmap);
-            g.CopyFromScreen(pos, new Point(0, 0), new System.Drawing.Size(sz, sz));
-
-            for(int i = 0, ci = sz; i < ci; i++)
+            using (Bitmap myBitmap = new Bitmap(sz, sz))
             {
-                for(int j=0,cj=sz; j<cj; j++)
+                using (Graphics g = Graphics.FromImage(myBitmap))
                 {
-                    mSamplingContext.Condition.ColorRange.AddColor(myBitmap.GetPixel(i, j));
+                    g.CopyFromScreen(pos, new Point(0, 0), new System.Drawing.Size(sz, sz));
+                }
+                for (int i = 0, ci = sz; i < ci; i++)
+                {
+                    for (int j = 0, cj = sz; j < cj; j++)
+                    {
+                        mSamplingContext.Condition.ColorRange.AddColor(myBitmap.GetPixel(i, j));
+                    }
                 }
             }
             mSamplingContext.NotifyColorChanged();

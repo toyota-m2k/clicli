@@ -239,15 +239,18 @@ namespace CliCliBoy.view
         private void capture()
         {
             var org = mContext.Org;
-            Bitmap myBitmap = new Bitmap(mContext.CaptureWidth, mContext.CaptureHeight);
-            Graphics g = Graphics.FromImage(myBitmap);
-            g.CopyFromScreen(org, new System.Drawing.Point(0, 0), new System.Drawing.Size(mContext.CaptureWidth, mContext.CaptureHeight));
-
-            using (Stream stream = new MemoryStream())
+            using (Bitmap myBitmap = new Bitmap(mContext.CaptureWidth, mContext.CaptureHeight))
             {
-                myBitmap.Save(stream, ImageFormat.Png);
-                stream.Seek(0, SeekOrigin.Begin);
-                CapturedImage.Source = BitmapFrame.Create(stream, BitmapCreateOptions.None, BitmapCacheOption.OnLoad);
+                using (Graphics g = Graphics.FromImage(myBitmap))
+                {
+                    g.CopyFromScreen(org, new System.Drawing.Point(0, 0), new System.Drawing.Size(mContext.CaptureWidth, mContext.CaptureHeight));
+                }
+                using (Stream stream = new MemoryStream())
+                {
+                    myBitmap.Save(stream, ImageFormat.Png);
+                    stream.Seek(0, SeekOrigin.Begin);
+                    CapturedImage.Source = BitmapFrame.Create(stream, BitmapCreateOptions.None, BitmapCacheOption.OnLoad);
+                }
             }
         }
 

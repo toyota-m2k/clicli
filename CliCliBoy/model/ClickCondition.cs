@@ -166,11 +166,15 @@ namespace CliCliBoy.model
         {
             try
             {
-                Bitmap myBitmap = new Bitmap(1, 1);
-                Graphics g = Graphics.FromImage(myBitmap);
-                g.CopyFromScreen(absPoint, new Point(0, 0), new System.Drawing.Size(1, 1));
-                var color = myBitmap.GetPixel(0, 0);
-                return ColorRange.IsInRange(color, sb);
+                using (Bitmap myBitmap = new Bitmap(1, 1))
+                {
+                    using (Graphics g = Graphics.FromImage(myBitmap))
+                    {
+                        g.CopyFromScreen(absPoint, new Point(0, 0), new System.Drawing.Size(1, 1));
+                        var color = myBitmap.GetPixel(0, 0);
+                        return ColorRange.IsInRange(color, sb);
+                    }
+                }
             }
             catch (Win32Exception ex)
             {
