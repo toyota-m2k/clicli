@@ -296,10 +296,19 @@
 if NOT EXIST D:\bin\tools\ goto NOTOOLS
 
 copy $(TargetPath) D:\bin\tools
-goto END
+goto DBOX
 
 :NOTOOLS
 echo No tools folder.
+
+:DBOX
+if %25DROPBOX%25 == "" goto NODBOX
+copy $(TargetPath)　%25DROPBOX%25\bin
+goto END
+
+:NODBOX
+echo No dropbox.
+
 :END
 </PostBuildEvent>
   </PropertyGroup>
