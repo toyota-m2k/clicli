@@ -32,6 +32,8 @@
         <CommandBinding Command="{x:Static local:MainWindow.EditTarget}" Executed="HandleEditTarget" CanExecute="CanEditTarget"/>
         <CommandBinding Command="{x:Static local:MainWindow.InsertTarget}" Executed="HandleInsertTarget" CanExecute="CanInsertTarget"/>
         <CommandBinding Command="{x:Static local:MainWindow.DeleteTarget}" Executed="HandleDeleteTarget" CanExecute="CanDeleteTarget"/>
+        <CommandBinding Command="{x:Static local:MainWindow.EnableTarget}" Executed="HandleEnableTarget" CanExecute="CanEnableTarget"/>
+        <CommandBinding Command="{x:Static local:MainWindow.DisableTarget}" Executed="HandleDisableTarget" CanExecute="CanEnableTarget"/>
 
         <!-- File Command -->
         <CommandBinding Command="{x:Static local:MainWindow.FileNew}" Executed="HandleFileNew" CanExecute="CanExecAlways"/>
@@ -455,6 +457,9 @@
                                 <MenuItem Header="Edit" Command="{x:Static local:MainWindow.EditTarget}"/>
                                 <MenuItem Header="Insert" Command="{x:Static local:MainWindow.InsertTarget}"/>
                                 <MenuItem Header="Delete" Command="{x:Static local:MainWindow.DeleteTarget}"/>
+                                <Separator/>
+                                <MenuItem Header="Enable" Command="{x:Static local:MainWindow.EnableTarget}"/>
+                                <MenuItem Header="Disable" Command="{x:Static local:MainWindow.DisableTarget}"/>
                             </ContextMenu>
                         </ListView.ContextMenu>
                         <ListView.InputBindings>
@@ -463,6 +468,8 @@
                             <KeyBinding Modifiers="Ctrl" Key="V" Command="{x:Static local:MainWindow.PasteTarget}"/>
                             <KeyBinding Key="Delete" Command="{x:Static local:MainWindow.DeleteTarget}"/>
                             <KeyBinding Key="Return" Command="{x:Static local:MainWindow.EditTarget}"/>
+                            <KeyBinding Modifiers="Ctrl" Key="E" Command="{x:Static local:MainWindow.EnableTarget}"/>
+                            <KeyBinding Modifiers="Ctrl" Key="D" Command="{x:Static local:MainWindow.DisableTarget}"/>
                         </ListView.InputBindings>
 
                         <ListView.View>

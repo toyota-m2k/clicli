@@ -788,6 +788,8 @@ namespace CliCliBoy
         public readonly static RoutedCommand EditTarget       = new RoutedCommand("EditTarget", typeof(MainWindow));
         public readonly static RoutedCommand InsertTarget     = new RoutedCommand("InsertTarget", typeof(MainWindow));
         public readonly static RoutedCommand DeleteTarget     = new RoutedCommand("DeleteTarget", typeof(MainWindow));
+        public readonly static RoutedCommand EnableTarget     = new RoutedCommand("EnableTarget", typeof(MainWindow));
+        public readonly static RoutedCommand DisableTarget    = new RoutedCommand("DisableTarget", typeof(MainWindow));
         // for File Operation
         public readonly static RoutedCommand FileNew          = new RoutedCommand("FileNew", typeof(MainWindow));
         public readonly static RoutedCommand FileOpen         = new RoutedCommand("FileOpen", typeof(MainWindow));
@@ -1029,6 +1031,25 @@ namespace CliCliBoy
             deleteSelectedTargetItems();
         }
 
+        private void enableTargets(bool enable)
+        {
+            foreach(TargetItem item in this.TargetListView.SelectedItems)
+            {
+                item.Enabled = enable;
+            }
+        }
+
+        private void HandleEnableTarget(object sender, ExecutedRoutedEventArgs e)
+        {
+            enableTargets(true);
+        }
+
+        private void HandleDisableTarget(object sender, ExecutedRoutedEventArgs e)
+        {
+            enableTargets(false);
+        }
+
+
         private void HandleInsertTarget(object sender, ExecutedRoutedEventArgs e)
         {
             int index = TargetListView.SelectedIndex;
@@ -1044,6 +1065,12 @@ namespace CliCliBoy
         {
             e.CanExecute = mContext.IsSingleProjectSelection && this.TargetListView.SelectedItems.Count > 0;
         }
+
+        private void CanEnableTarget(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = this.TargetListView.SelectedItems.Count > 0;
+        }
+
 
         void CanEditTarget(object sender, CanExecuteRoutedEventArgs e)
         {
@@ -1250,5 +1277,6 @@ namespace CliCliBoy
             }
             DebugOutput.Text = sb.ToString();
         }
+
     }
 }
