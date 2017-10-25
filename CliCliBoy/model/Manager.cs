@@ -660,6 +660,7 @@ namespace CliCliBoy.model
 
                 if( obj is Manager)
                 {
+                    ((Manager)obj).IsModified = false;
                     ((Manager)obj).Projects.CheckAndRepairNextId();
                 }
             }

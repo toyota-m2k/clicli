@@ -12,7 +12,7 @@ namespace CliCliBoy.model
     /**
      * プロジェクトクラス
      */
-    public class Project : Notifier
+    public class Project : Notifier, ITargetWinPosProp
     {
         // fields...
         private PointingMode mMode;     // pointing mode + base point
@@ -208,6 +208,32 @@ namespace CliCliBoy.model
             }
         }
 
+        private TargetWinPos _targetWinPos = new TargetWinPos();
+        public TargetWinPos TargetWinPos
+        {
+            get
+            {
+                return _targetWinPos;
+            }
+            set
+            {
+                if(null==value)
+                {
+                    if(_targetWinPos.hasValue)
+                    {
+                        _targetWinPos.Clear();
+                        IsModified = true;
+                    }
+                }
+                else if(value!=_targetWinPos)
+                {
+                    _targetWinPos = value;
+                    IsModified = true;
+                }
+            }
+        }
+
+
         #endregion
 
         #region Item Cordinate
@@ -243,7 +269,6 @@ namespace CliCliBoy.model
          */
         public TargetItem AdjustPoint(TargetItem item)
         {
-
             Point basePoint = new Point();
             uint ratio = 100;
             if (mMode.IsRelative)
@@ -283,4 +308,6 @@ namespace CliCliBoy.model
         //}
         #endregion
     }
+
+
 }

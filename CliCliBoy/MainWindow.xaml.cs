@@ -75,6 +75,19 @@ namespace CliCliBoy
             mContext.SelectProjectsFromIdList();
 
             updateTitle();
+
+            foreach (Window w in Application.Current.Windows)
+            {
+                if (w.IsVisible)
+                {
+                    string t = w.Title;
+                    if (null != t && t.Length > 0)
+                    {
+                        Debug.WriteLine(t);
+                    }
+                }
+            }
+
         }
 
         private void OnClosing(object sender, CancelEventArgs e)
@@ -297,7 +310,7 @@ namespace CliCliBoy
                 {
                     p.Ratio = ratio;
                 }
-            }, initRatio, x, y, Keyboard.FocusedElement);
+            }, initRatio, x, y, Keyboard.FocusedElement, top);
         }
 
         #endregion
@@ -500,7 +513,7 @@ namespace CliCliBoy
         /**
          * 位置設定パネルを開く
          */
-        private void GetPosition(PosGotCallback callback, RatioGotCallback ratioCallback=null, uint initRatio=100, int x=0, int y=0, IInputElement nextFocus=null)
+        private void GetPosition(PosGotCallback callback, RatioGotCallback ratioCallback=null, uint initRatio=100, int x=0, int y=0, IInputElement nextFocus=null, ITargetWinPosProp twp=null)
         {
             Status orgStatus = this.currentStatus;
             var focus = nextFocus!=null ? nextFocus : Keyboard.FocusedElement;
@@ -509,21 +522,27 @@ namespace CliCliBoy
 
             mContext.PlayStop();
             mContext.SuspendHotKey();
-
            
             GettingPointPanel.Open((ok) =>
             {
                 this.currentStatus = orgStatus;
                 mContext.ResumeHotKey();
-                if (ok&&null!=ratioCallback)
+                if (ok)
                 {
-                    ratioCallback(GettingPointPanel.Ratio);
+                    // Ratio
+                    ratioCallback?.Invoke(GettingPointPanel.Ratio);
+
+                    // TargetWinPos
+                    if (null != twp && GettingPointPanel.TargetWinPos.hasValue)
+                    {
+                        twp.TargetWinPos = GettingPointPanel.TargetWinPos;
+                    }
                 }
                 if (null != focus)
                 {
                     Keyboard.Focus(focus);
                 }
-            }, callback, ratioCallback, initRatio, x, y);
+            }, callback, ratioCallback, initRatio, x, y, twp);
         }
 
         /**

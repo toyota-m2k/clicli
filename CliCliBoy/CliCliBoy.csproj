@@ -86,6 +86,7 @@
     <Compile Include="model\ScreenPoint.cs" />
     <Compile Include="model\Settings.cs" />
     <Compile Include="model\ClipboardUtil.cs" />
+    <Compile Include="model\TargetWinPos.cs" />
     <Compile Include="view\DropDownButton.cs" />
     <Compile Include="view\MouseCursorWindow.xaml.cs">
       <DependentUpon>MouseCursorWindow.xaml</DependentUpon>

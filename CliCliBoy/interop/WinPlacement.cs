@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Interop;
+using Point = System.Drawing.Point;
 
 namespace CliCliBoy.interop
 {
@@ -237,12 +239,29 @@ namespace CliCliBoy.interop
         [DllImport("user32.dll")]
         public static extern IntPtr GetParent(IntPtr hWnd);
 
+        [DllImport("user32.dll")]
+        public static extern IntPtr GetAncestor(IntPtr hWnd, uint flags);
+        const uint GA_PARENT = 1;
+        const uint GA_ROOT = 2;
+        const uint GA_ROOTOWNER = 3;
+
+        [DllImport("user32.dll")]
+        public static extern int GetWindowRect(IntPtr hWnd, out RECT rect);
+
+        [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        private static extern bool SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int x, int y, int cx, int cy, uint flags);
+        const uint SWP_NOSIZE = 0x0001;
+        const uint SWP_NOMOVE = 0x0002;
+        const uint SWP_NOZORDER = 0x0004;
+        const uint SWP_SHOWWINDOW = 0x0040;
+
         //[DllImport("user32.dll")]
         //public static extern bool GetCursorPos(ref POINT lpPoint);
 
         public static Window GetWindowFromPoint(Point point)
         {
-            var hwnd = WindowFromPoint(new POINT((int)point.X, (int)point.Y));
+            var hwnd = WindowFromPoint(new POINT(point.X, point.Y));
             if (hwnd == IntPtr.Zero) return null;
             var p = GetParent(hwnd);
             while (p != IntPtr.Zero)
@@ -259,6 +278,34 @@ namespace CliCliBoy.interop
                 }
             }
             return null;
+        }
+
+        public static Rectangle? GetWindowPositionAtPoint(Point pos)
+        {
+            var hwnd = WindowFromPoint(new POINT(pos.X, pos.Y));
+            if (hwnd == IntPtr.Zero) return null;
+            var p = GetAncestor(hwnd, GA_ROOTOWNER);
+            if(p != IntPtr.Zero)
+            {
+                RECT rc = new RECT();
+                GetWindowRect(hwnd, out rc);
+                return new Rectangle(rc.Left, rc.Top, rc.Right - rc.Left, rc.Bottom - rc.Top);
+            }
+            return null;
+
+        }
+
+        public static bool SetWindowPositionAtPoint(Point pos, Rectangle rc)
+        {
+            var hwnd = WindowFromPoint(new POINT(pos.X, pos.Y));
+            if (hwnd == IntPtr.Zero) return false;
+            var p = GetAncestor(hwnd, GA_ROOTOWNER);
+            if (p != IntPtr.Zero)
+            {
+                SetWindowPos(p, IntPtr.Zero, rc.Left, rc.Top, rc.Width, rc.Height, SWP_NOZORDER);
+                return true;
+            }
+            return false;
         }
     }
 }

@@ -15,7 +15,7 @@ namespace CliCliBoy
     public delegate void ColorGotCallback(Point p, HSVColorRange colors);
     public delegate void RequestGetPosition(IDialog dialog, PosGotCallback gotpos);
     public delegate void RatioGotCallback(uint ratio);
-    
+
     public interface IDialog
     {
         UserControl Control { get; }

@@ -13,9 +13,10 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
-using System.Windows.Shapes;
 using System.Windows.Threading;
 using Point = System.Drawing.Point;
+using Rectangle = System.Drawing.Rectangle;
+
 
 namespace CliCliBoy.view
 {
@@ -96,6 +97,35 @@ namespace CliCliBoy.view
             }
 
             public bool PositionAvailable { get; set; } = false;
+
+            private TargetWinPos _targetWinPos = null;
+            public TargetWinPos TargetWinPos
+            {
+                get { return _targetWinPos; }
+                set
+                {
+                    if (_targetWinPos != value)
+                    {
+                        _targetWinPos = value;
+                        notify("TargetWinPos");
+                        notify("TargetWinPosEnabled");
+                        notify("HasTargetWinPos");
+                        notify("SettingTargetWinPos");
+                    }
+                }
+            }
+
+            public bool TargetWinPosEnabled { get { return null != TargetWinPos; } }
+
+            public bool HasTargetWinPos { get { return null != TargetWinPos && TargetWinPos.hasValue; } }
+
+            private bool mSettingTargetWinPos = false;
+            public bool SettingTargetWinPos
+            {
+                get { return mSettingTargetWinPos; }
+                set { mSettingTargetWinPos = value; notify("SettingTargetWinPos"); }
+            }
+
         }
 
         private HotKey mHotKey;
@@ -128,6 +158,11 @@ namespace CliCliBoy.view
             set { mGPData.Ratio = value; }
         }
 
+        public TargetWinPos TargetWinPos
+        {
+            get { return mGPData.TargetWinPos; }
+        }
+
         private void Close(bool result) {
             if (null != mHotKey)
             {
@@ -152,8 +187,26 @@ namespace CliCliBoy.view
 
         private void setResultOrgPoint(Point pos)
         {
-            mGPData.OrgPoint = pos;
-            mGPData.PositionAvailable = true;
+            if (mGPData.SettingTargetWinPos)
+            {
+                if(mGPData.TargetWinPos.hasValue && !mGPData.TargetWinPos.Position.IsEmpty)
+                {
+                    WinPlacement.SetWindowPositionAtPoint(pos, mGPData.TargetWinPos.Position);
+                }
+            }
+            else
+            {
+                if(mGPData.TargetWinPosEnabled)
+                {
+                    Rectangle? rc = WinPlacement.GetWindowPositionAtPoint(pos);
+                    if(rc!=null)
+                    {
+                        mGPData.TargetWinPos = new TargetWinPos(rc.Value);
+                    }
+                }
+                mGPData.OrgPoint = pos;
+                mGPData.PositionAvailable = true;
+            }
         }
 
         private void prepareHotKey()
@@ -191,7 +244,7 @@ namespace CliCliBoy.view
             }
         }
 
-        public void Open(OnCloseHandler onClose, PosGotCallback gotpos, RatioGotCallback gotratio, uint initRatio, int x, int y)
+        public void Open(OnCloseHandler onClose, PosGotCallback gotpos, RatioGotCallback gotratio, uint initRatio, int x, int y, ITargetWinPosProp twp)
         {
             mOnClose = onClose;
             mOnGotPos = gotpos;
@@ -206,6 +259,10 @@ namespace CliCliBoy.view
             mGPData.PositionAvailable = false;
             GPTChk.IsChecked = false;
 
+            if (null != twp)
+            {
+                mGPData.TargetWinPos = twp.TargetWinPos.Clone();
+            }
 
             prepareHotKey();
         }
@@ -356,5 +413,6 @@ namespace CliCliBoy.view
             mc.DecisionEnabled = false;
             mc.ShowAt(mGPData.OrgPoint, 5);
         }
+
     }
 }

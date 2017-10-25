@@ -10,7 +10,7 @@
     <UserControl.Resources>
         <ResourceDictionary Source="CommonResource.xaml"/>
     </UserControl.Resources>
-    <Grid>
+    <Grid Margin="0,0,0,-51">
         <StackPanel x:Name="GetPositionMain" VerticalAlignment="Center" HorizontalAlignment="Center" >
             <TextBlock FontWeight="Bold" TextWrapping="Wrap" TextAlignment="Center">
                     Move mouse to target point, <LineBreak/>and press 'A' key or '+' key in numeric pad.
@@ -24,43 +24,69 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="Auto"/>
-                </Grid.ColumnDefinitions>
-                <StackPanel Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,5,0,15">
-                    <TextBlock VerticalAlignment="Center">
-                        <TextBlock.Text>
-                            <MultiBinding StringFormat="Based at ({0},{1})">
-                                <Binding Path="OrgPoint.X" />
-                                <Binding Path="OrgPoint.Y" />
-                            </MultiBinding>
-                        </TextBlock.Text>
-                    </TextBlock>
-                    <Button Style="{StaticResource NorButton}" Content="Show Pos." Margin="5,0,0,0" Padding="8,2" Click="Btn_ShowPos"/>
-                    <Button Style="{StaticResource NorButton}" Content="Adjust" Margin="5,0,0,0" Padding="8,2" Click="Btn_Adjust"/>
+
+                <Grid Grid.Row="0" HorizontalAlignment="Center" Visibility="{Binding SettingTargetWinPos, Converter={StaticResource NegBoolToVisibility}}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,5,0,15">
+                        <TextBlock VerticalAlignment="Center">
+                            <TextBlock.Text>
+                                <MultiBinding StringFormat="Based at ({0},{1})">
+                                    <Binding Path="OrgPoint.X" />
+                                    <Binding Path="OrgPoint.Y" />
+                                </MultiBinding>
+                            </TextBlock.Text>
+                        </TextBlock>
+                        <Button Style="{StaticResource NorButton}" Content="Show Pos." Margin="5,0,0,0" Padding="8,2" Click="Btn_ShowPos"/>
+                        <Button Style="{StaticResource NorButton}" Content="Adjust" Margin="5,0,0,0" Padding="8,2" Click="Btn_Adjust"/>
+                    </StackPanel>
+
+                    <TextBlock Grid.Row="1" Grid.Column="0" Text="Exp.Ratio" Margin="0,0,10,0"/>
+                    <local:NumericTextBox x:Name="RatioEdit" Grid.Row="1" Grid.Column="1" Text="{Binding Ratio}" />
+                    <TextBlock Grid.Row="1" Grid.Column="2" Text="%" HorizontalAlignment="Center"/>
+
+                    <StackPanel Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Center">
+                        <Button Content="100" Width="35" Style="{StaticResource NorButton}" Margin="0,5,2,0" Click="PresetRatio_Click"/>
+                        <Button Content="90" Width="35" Style="{StaticResource NorButton}" Margin="0,5,2,0" Click="PresetRatio_Click"/>
+                        <Button Content="75" Width="35" Style="{StaticResource NorButton}" Margin="0,5,2,0" Click="PresetRatio_Click"/>
+                        <Button Content="67" Width="35" Style="{StaticResource NorButton}" Margin="0,5,2,0" Click="PresetRatio_Click"/>
+                        <Button Content="50" Width="35" Style="{StaticResource NorButton}" Margin="0,5,2,0" Click="PresetRatio_Click"/>
+                    </StackPanel>
+
+                </Grid>
+
+                <StackPanel Grid.Row="1" Orientation="Vertical" HorizontalAlignment="Left" Visibility="{Binding TargetWinPosEnabled, Converter={StaticResource BoolToVisibility}}" Margin="0,10,0,0">
+                    <CheckBox IsEnabled="{Binding HasTargetWinPos}" IsChecked="{Binding SettingTargetWinPos, Mode=TwoWay}">
+                        <TextBlock IsEnabled="{Binding HasTargetWinPos}">
+                            <TextBlock.Text>
+                                <MultiBinding StringFormat="Move target to ({0},{1})-({2},{3})">
+                                    <Binding Path="TargetWinPos.Position.Left" />
+                                    <Binding Path="TargetWinPos.Position.Top" />
+                                    <Binding Path="TargetWinPos.Position.Right" />
+                                    <Binding Path="TargetWinPos.Position.Bottom" />
+                                </MultiBinding>
+                            </TextBlock.Text>
+                        </TextBlock>
+                    </CheckBox>
                 </StackPanel>
-
-                <TextBlock Grid.Row="1" Grid.Column="0" Text="Exp.Ratio" Margin="0,0,10,0"/>
-                <local:NumericTextBox x:Name="RatioEdit" Grid.Row="1" Grid.Column="1" Text="{Binding Ratio}" />
-                <TextBlock Grid.Row="1" Grid.Column="2" Text="%" HorizontalAlignment="Center"/>
-
-                <StackPanel Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Center">
-                    <Button Content="100" Width="35" Style="{StaticResource NorButton}" Margin="0,5,2,0" Click="PresetRatio_Click"/>
-                    <Button Content="90" Width="35" Style="{StaticResource NorButton}" Margin="0,5,2,0" Click="PresetRatio_Click"/>
-                    <Button Content="75" Width="35" Style="{StaticResource NorButton}" Margin="0,5,2,0" Click="PresetRatio_Click"/>
-                    <Button Content="67" Width="35" Style="{StaticResource NorButton}" Margin="0,5,2,0" Click="PresetRatio_Click"/>
-                    <Button Content="50" Width="35" Style="{StaticResource NorButton}" Margin="0,5,2,0" Click="PresetRatio_Click"/>
-                </StackPanel>
-
             </Grid>
 
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Visibility="{Binding SettingTargetWinPos, Converter={StaticResource NegBoolToVisibility}}">
                 <Button Content="OK" Width="80" Margin="5,20,5,0" Click="OkButton_Click" Style="{StaticResource OkButton}" Visibility="{Binding EnableRatio, Converter={StaticResource BoolToVisibility}}"/>
                 <Button Content="Cancel" Width="80" Margin="5,20,5,0" Click="CancelButton_Click" Style="{StaticResource CancelButton}"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Visibility="{Binding SettingTargetWinPos, Converter={StaticResource BoolToVisibility}}">
+                <Button Content="Close" Width="80" Margin="0,20,0,0" Click="CancelButton_Click" Style="{StaticResource CancelButton}"/>
             </StackPanel>
 
         </StackPanel>
