@@ -396,6 +396,25 @@ namespace CliCliBoy.model
             return String.Format("TargetItem: {0} ({1},{2}) : {3}", mType.ToString(), mScreenPoint.Point.X, mScreenPoint.Point.Y, mComment);
         }
 
+        private int mUtilizationCount = 0;
+        [System.Xml.Serialization.XmlIgnore]
+        public int UtilizationCount
+        {
+            get
+            {
+                return mUtilizationCount;
+            }
+            set
+            {
+                mUtilizationCount = value;
+                notify("UtilizationCount");
+            }
+        }
+
+        public void Used()
+        {
+            UtilizationCount++;
+        }
     }
 
 }

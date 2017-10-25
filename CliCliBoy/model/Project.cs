@@ -307,6 +307,14 @@ namespace CliCliBoy.model
         //    mTargets[index] = AdjustPoint(item);
         //}
         #endregion
+
+        public void ClearUtilizationCounter()
+        {
+            foreach(var v in mTargets)
+            {
+                v.UtilizationCount = 0;
+            }
+        }
     }
 
 

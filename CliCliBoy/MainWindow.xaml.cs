@@ -1297,5 +1297,26 @@ namespace CliCliBoy
             DebugOutput.Text = sb.ToString();
         }
 
+        private GridViewColumn mUtilizationColumn = null;
+        private void utilizationMode_Checked(object sender, RoutedEventArgs e)
+        {
+            mContext.Projects.ClearUtilizationCounter();
+            if (null == mUtilizationColumn)
+            {
+                mUtilizationColumn = TargetListView.TryFindResource("glidViewUtilizationColumn") as GridViewColumn;
+            }
+            if(null!=mUtilizationColumn)
+            {
+                TargetGridView.Columns.Add(mUtilizationColumn);
+            }
+        }
+
+        private void utilizationMode_Unchecked(object sender, RoutedEventArgs e)
+        {
+            if(null!=mUtilizationColumn)
+            {
+                TargetGridView.Columns.Remove(mUtilizationColumn);
+            }
+        }
     }
 }

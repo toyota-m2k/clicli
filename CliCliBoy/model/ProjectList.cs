@@ -318,6 +318,14 @@ namespace CliCliBoy.model
             return null;
         }
 
+        internal void ClearUtilizationCounter()
+        {
+            foreach(var p in mProjects)
+            {
+                p.ClearUtilizationCounter();
+            }
+        }
+
 
         #endregion
 

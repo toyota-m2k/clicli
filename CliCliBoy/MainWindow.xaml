@@ -72,6 +72,15 @@
                     </DataTrigger>
                 </Style.Triggers>
             </Style>
+
+            <GridViewColumn x:Key="glidViewUtilizationColumn" Header="Utilization" Width="50">
+                <GridViewColumn.CellTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding UtilizationCount}" HorizontalAlignment="Right"/>
+                    </DataTemplate>
+                </GridViewColumn.CellTemplate>
+            </GridViewColumn>
+
         </Grid.Resources>
         <Grid x:Name="SettingPanel" Visibility="Visible">
             <Grid.ColumnDefinitions>
@@ -383,9 +392,12 @@
                             <Image Source="{StaticResource DownIcon}"/>
                         </Button>
                         </StackPanel>
-                        <StackPanel VerticalAlignment="Center" Orientation="Vertical">
-                            <CheckBox Content="Check Mode" Foreground="White" IsChecked="{Binding CheckMode}" x:Name="checkMode" Checked="checkMode_Checked" Unchecked="checkMode_Unchecked"/>
-                            <Button Margin="0,6,0,0" Click="BtnTestAll_Click">
+                        <StackPanel VerticalAlignment="Center" Orientation="Vertical" HorizontalAlignment="Left">
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
+                                <CheckBox Content="Check Mode" Foreground="White" IsChecked="{Binding CheckMode}" x:Name="checkMode" Checked="checkMode_Checked" Unchecked="checkMode_Unchecked"/>
+                                <CheckBox Content="Utilization" Foreground="White" IsChecked="{Binding UtlizationMode}" x:Name="utilizationiMode" Checked="utilizationMode_Checked" Unchecked="utilizationMode_Unchecked" Margin="10,0,0,0"/>
+                            </StackPanel>
+                            <Button Margin="0,6,0,0" Click="BtnTestAll_Click" Width="100" HorizontalAlignment="Left">
                                 <TextBlock>Test All</TextBlock>
                             </Button>
                         </StackPanel>
@@ -473,7 +485,7 @@
                         </ListView.InputBindings>
 
                         <ListView.View>
-                            <GridView>
+                            <GridView x:Name="TargetGridView">
                                 <GridViewColumn Width="40">
                                     <GridViewColumnHeader IsEnabled="False"/>
                                     <GridViewColumn.CellTemplate>

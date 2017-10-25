@@ -294,6 +294,9 @@ namespace CliCliBoy.model
         [System.Xml.Serialization.XmlIgnore]
         public bool CheckMode { get; set; } = false;
 
+        [System.Xml.Serialization.XmlIgnore]
+        public bool UtlizationMode { get; set; } = false;
+
 
         /**
          * プロジェクトが選択されたときの処理
@@ -693,5 +696,11 @@ namespace CliCliBoy.model
             return (Manager)obj;
         }
         #endregion
+
+        void ClearUtilizationCounter()
+        {
+            mProjects.ClearUtilizationCounter();
+        }
+
     }
 }

@@ -43,6 +43,10 @@ namespace CliCliBoy.model
 
             private void onClicked(TargetItem item)
             {
+                if (Globals.Instance.DataContext.UtlizationMode)
+                {
+                    item.Used();
+                }
                 PlayerList parent;
                 if (mParent.TryGetTarget(out parent))
                 {
