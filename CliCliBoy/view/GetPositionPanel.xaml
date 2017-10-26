@@ -69,7 +69,7 @@
                     <CheckBox IsChecked="{Binding SettingTargetWinPos, Mode=TwoWay}" VerticalAlignment="Center">
                         <TextBlock>
                             <TextBlock.Text>
-                                <MultiBinding StringFormat="Move target window to ({0},{1}) {2}W x {3}H">
+                                <MultiBinding StringFormat="Move target to ({0},{1}) {2}W x {3}H">
                                     <Binding Path="TargetWinPos.X" Mode="OneWay"/>
                                     <Binding Path="TargetWinPos.Y" Mode="OneWay"/>
                                     <Binding Path="TargetWinPos.Width" Mode="OneWay"/>
