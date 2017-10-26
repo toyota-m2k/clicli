@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,11 +9,11 @@ namespace CliCliBoy.model
 {
     public class ConditionList : Notifier
     {
-        List<ClickCondition> mList;
+        ObservableCollection<ClickCondition> mList;
 
         public ConditionList()
         {
-            mList = new List<ClickCondition>(3);
+            mList = new ObservableCollection<ClickCondition>();
         }
 
         public enum ConditionCombination {

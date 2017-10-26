@@ -49,6 +49,27 @@ namespace CliCliBoy.model
             }
         }
 
+        public int X
+        {
+            get { return _position.X; }
+            set { _position.X = value; }
+        }
+        public int Y
+        {
+            get { return _position.Y; }
+            set { _position.Y = value; }
+        }
+        public int Width
+        {
+            get { return _position.Width; }
+            set { _position.Width = value; }
+        }
+        public int Height
+        {
+            get { return _position.Height; }
+            set { _position.Height = value; }
+        }
+
         public void Clear()
         {
             _position = new Rectangle();

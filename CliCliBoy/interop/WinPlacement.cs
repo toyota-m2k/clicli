@@ -297,12 +297,17 @@ namespace CliCliBoy.interop
 
         public static bool SetWindowPositionAtPoint(Point pos, Rectangle rc)
         {
+            uint flags = SWP_NOZORDER;
+            if(rc.Width==0&&rc.Height==0)
+            {
+                flags |= SWP_NOSIZE;
+            }
             var hwnd = WindowFromPoint(new POINT(pos.X, pos.Y));
             if (hwnd == IntPtr.Zero) return false;
             var p = GetAncestor(hwnd, GA_ROOTOWNER);
             if (p != IntPtr.Zero)
             {
-                SetWindowPos(p, IntPtr.Zero, rc.Left, rc.Top, rc.Width, rc.Height, SWP_NOZORDER);
+                SetWindowPos(p, IntPtr.Zero, rc.Left, rc.Top, rc.Width, rc.Height, flags);
                 return true;
             }
             return false;

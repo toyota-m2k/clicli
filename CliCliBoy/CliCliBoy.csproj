@@ -78,6 +78,7 @@
     <Compile Include="Defs.cs" />
     <Compile Include="interop\WinPlacement.cs" />
     <Compile Include="model\ClickCondition.cs" />
+    <Compile Include="model\ConditionList.cs" />
     <Compile Include="model\HotKeyDriver.cs" />
     <Compile Include="model\HSVColor.cs" />
     <Compile Include="model\IntRange.cs" />

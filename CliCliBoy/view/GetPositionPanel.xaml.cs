@@ -189,10 +189,7 @@ namespace CliCliBoy.view
         {
             if (mGPData.SettingTargetWinPos)
             {
-                if(mGPData.TargetWinPos.hasValue && !mGPData.TargetWinPos.Position.IsEmpty)
-                {
-                    WinPlacement.SetWindowPositionAtPoint(pos, mGPData.TargetWinPos.Position);
-                }
+                WinPlacement.SetWindowPositionAtPoint(pos, mGPData.TargetWinPos.Position);
             }
             else
             {
@@ -414,5 +411,9 @@ namespace CliCliBoy.view
             mc.ShowAt(mGPData.OrgPoint, 5);
         }
 
+        private void Btn_ClearTargetWinPos(object sender, RoutedEventArgs e)
+        {
+            mGPData.TargetWinPos = new TargetWinPos(new Rectangle(-8,-8,0,0));
+        }
     }
 }
