@@ -288,7 +288,7 @@ namespace CliCliBoy.interop
             if(p != IntPtr.Zero)
             {
                 RECT rc = new RECT();
-                GetWindowRect(hwnd, out rc);
+                GetWindowRect(p, out rc);
                 return new Rectangle(rc.Left, rc.Top, rc.Right - rc.Left, rc.Bottom - rc.Top);
             }
             return null;
