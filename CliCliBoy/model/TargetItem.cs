@@ -46,6 +46,7 @@ namespace CliCliBoy.model
         private bool mModified;
         private ScreenPoint mScreenPoint;
         private ClickCondition mCondition;
+        private ConditionList mConditionList;
         private KeyType mPressKey;
 
         //private Point mPoint;
@@ -57,7 +58,7 @@ namespace CliCliBoy.model
         [System.Xml.Serialization.XmlIgnore]
         public bool IsModified
         {
-            get { return mModified || mScreenPoint.IsModified || mCondition.IsModified; }
+            get { return mModified || mScreenPoint.IsModified || mCondition.IsModified || mConditionList.IsModified; }
             set
             {
                 mModified = value;
@@ -65,6 +66,7 @@ namespace CliCliBoy.model
                 {
                     mScreenPoint.IsModified = false;
                     mCondition.IsModified = false;
+                    mConditionList.IsModified = false;
                 }
             }
         }
@@ -160,6 +162,17 @@ namespace CliCliBoy.model
             }
         }
 
+        public ConditionList ConditionList
+        {
+            get { return mConditionList; }
+            set
+            {
+                mConditionList.CopyFrom(value);
+                notify("ConditionList");
+                IsModified = true;
+            }
+        }
+
         /**
          * クリック位置を保持するプロパティ
          * XAMLにBindするためにpublicにしている。ClickConditionとの整合を保つため、Projectなどから、このプロパティを直接操作してはならない。
@@ -185,6 +198,7 @@ namespace CliCliBoy.model
         {
             ScreenPoint.Ratio = ratio;
             Condition.ScreenPoint.Ratio = ratio;
+            ConditionList.SetRatio(ratio);
         }
 
         public void SetBasePointKeepAbs(Point bp)
@@ -310,6 +324,7 @@ namespace CliCliBoy.model
             mName = "";
             mWheelAmount = 0;
             mCondition = new ClickCondition();
+            mConditionList = new ConditionList();
             mScreenPoint = new ScreenPoint();
             mPressKey = KeyType.ESC;
             IsModified = false;
@@ -344,6 +359,7 @@ namespace CliCliBoy.model
             mWheelAmount = s.mWheelAmount;
 
             mCondition = new ClickCondition(s.Condition);
+            mConditionList = new ConditionList(s.ConditionList);
             mScreenPoint = new ScreenPoint(s.ScreenPoint);
             mPressKey = s.mPressKey;
             IsModified = false;

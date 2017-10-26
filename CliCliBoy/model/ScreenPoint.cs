@@ -181,6 +181,27 @@ namespace CliCliBoy.model
             return null!=null && s.Point == Point && BasePoint == s.BasePoint && Ratio == s.Ratio;
         }
 
+        public static bool operator ==(ScreenPoint a, ScreenPoint b)
+        {
+            if (System.Object.ReferenceEquals(a, b))
+            {
+                return true;
+            }
+            if (((object)a == null) || ((object)b == null))
+            {
+                return false;
+            }
+            else
+            {
+                return a.Equals(b);
+            }
+        }
+        public static bool operator !=(ScreenPoint a, ScreenPoint b)
+        {
+            return !(a == b);
+        }
+
+
         public ScreenPoint Clone()
         {
             return new ScreenPoint(this);

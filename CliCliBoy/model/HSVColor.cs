@@ -238,6 +238,26 @@ namespace CliCliBoy.model
             return H.Equals(f.H) && S.Equals(f.S) && V.Equals(f.V);
         }
 
+        public static bool operator ==(HSVColorRange a, HSVColorRange b)
+        {
+            if (System.Object.ReferenceEquals(a, b))
+            {
+                return true;
+            }
+            if (((object)a == null) || ((object)b == null))
+            {
+                return false;
+            }
+            else
+            {
+                return a.Equals(b);
+            }
+        }
+        public static bool operator !=(HSVColorRange a, HSVColorRange b)
+        {
+            return !(a == b);
+        }
+
         public void CopyFrom(HSVColorRange s)
         {
             if (null == s)
