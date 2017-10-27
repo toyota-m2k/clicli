@@ -7,7 +7,7 @@
              xmlns:view="clr-namespace:CliCliBoy.view"
              xmlns:model="clr-namespace:CliCliBoy.model"
              mc:Ignorable="d" 
-             d:DesignHeight="350" d:DesignWidth="400">
+             d:DesignHeight="500" d:DesignWidth="400">
     <UserControl.Resources>
         <ResourceDictionary Source="CommonResource.xaml"/>
     </UserControl.Resources>
@@ -15,6 +15,8 @@
     <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
         <Grid x:Name="TargetEditMain">
             <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="auto"/>
@@ -41,8 +43,7 @@
 
             <!--Type-->
             <TextBlock Grid.Row="1" Grid.Column="0" Text="Action Type" Style="{StaticResource left}"/>
-            <StackPanel Grid.Row="1" Grid.Column="1" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="10" Orientation="Vertical" Style="{StaticResource right}">
-
+            <!--<StackPanel Grid.Row="1" Grid.Column="1" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="10" Orientation="Vertical" Style="{StaticResource right}">
                 <RadioButton Content="Click"        IsChecked="{Binding Type, Mode=TwoWay, Converter={StaticResource EnumBooleanConverter}, ConverterParameter=CLICK}"   GroupName="Type"/>
                 <RadioButton Content="Double Click" IsChecked="{Binding Type, Mode=TwoWay, Converter={StaticResource EnumBooleanConverter}, ConverterParameter=DBLCLK}"  GroupName="Type"/>
                 <StackPanel Orientation="Horizontal">
@@ -59,6 +60,36 @@
                     </ComboBox>
                 </StackPanel>
                 <RadioButton Content="Noop"         IsChecked="{Binding Type, Mode=TwoWay, Converter={StaticResource EnumBooleanConverter}, ConverterParameter=NOOP}"    GroupName="Type"/>
+            </StackPanel>-->
+
+            <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Vertical" Style="{StaticResource right}">
+                <ComboBox   ItemsSource="{Binding Source={StaticResource ClickTypes}}"
+                            SelectedValue="{Binding Type}"
+                            >
+                </ComboBox>
+                <StackPanel Orientation="Horizontal"
+                            Visibility="{Binding Type, Converter={StaticResource EnumVisibilityConverter}, ConverterParameter=KEYPRESS}"
+                            Margin="0,5,0,0"
+                            >
+                    <TextBlock Text="Key: " VerticalAlignment="Center"/>
+                    <ComboBox   ItemsSource="{Binding Source={StaticResource KeyTypes}}"
+                            SelectedValue="{Binding PressKey}"
+                            Margin="0"
+                            HorizontalAlignment="Left"
+                            >
+                    </ComboBox>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal"
+                            Visibility="{Binding Type, Converter={StaticResource EnumVisibilityConverter}, ConverterParameter=WHEEL}"
+                            Margin="0,5,0,0"
+                            >
+                    <TextBlock Text="Amounts: " VerticalAlignment="Center"/>
+                    <local:NumericTextBox 
+                            Text="{Binding WheelAmount, UpdateSourceTrigger=PropertyChanged}" 
+                            Width="60" Margin="0" 
+                            HorizontalAlignment="Left"
+                            />
+                </StackPanel>
             </StackPanel>
 
             <!--Point-->
@@ -66,7 +97,7 @@
             <Button Grid.Row="2" Grid.Column="1" Style="{StaticResource StrongButton}" Width="auto" Click="Button_SetPoint" Visibility="{Binding Type, Converter={StaticResource TypePointVisibilityConverter}}">
                 <TextBlock Visibility="{Binding Type, Converter={StaticResource TypePointVisibilityConverter}}">
                     <TextBlock.Text>
-                        <MultiBinding StringFormat="({0},{1})">
+                        <MultiBinding StringFormat="{}{0},{1}">
                             <Binding Path="ScreenPoint.Point.X" />
                             <Binding Path="ScreenPoint.Point.Y" />
                         </MultiBinding>
@@ -97,41 +128,82 @@
             <TextBlock Grid.Row="6" Grid.Column="0" Text="Comment" HorizontalAlignment="Right" Style="{StaticResource left}"/>
             <TextBox x:Name="TxComment" Grid.Row="6" Grid.Column="1" Text="{Binding Comment, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource right}"/>
 
-            <TextBlock Grid.Row="7" Grid.Column="0" Text="Condition" HorizontalAlignment="Right" Style="{StaticResource left}"/>
-            <StackPanel Grid.Row="7" Grid.Column="1" Orientation="Horizontal">
-                <TextBlock Text="{Binding Condition.ConditionSummary}" Style="{StaticResource right}"/>
-                <StackPanel Orientation="Horizontal" Visibility="{Binding Condition.Type, Converter={StaticResource NegEnumBooleanConverter}, ConverterParameter=NONE}">
-                    <Grid Width="20" Height="20" Margin="10,0">
-                        <Border BorderBrush="Black" BorderThickness="1">
-                            <Border.Background>
-                                <SolidColorBrush Color="{Binding Condition.ColorRange[8]}"/>
-                            </Border.Background>
-                        </Border>
-                    </Grid>
-                    <Button Style="{StaticResource NorButton}" Click="Button_TryDecide">
-                        <TextBlock>
-                            <TextBlock.Text>
-                                <MultiBinding StringFormat="({0},{1})">
-                                    <Binding Path="Condition.ScreenPoint.Point.X" />
-                                    <Binding Path="Condition.ScreenPoint.Point.Y" />
-                                </MultiBinding>
-                            </TextBlock.Text>
-                        </TextBlock>
-                    </Button>
-                </StackPanel>
-            </StackPanel>
-            <Button Grid.Row="7" Grid.Column="2" Content="Set" Style="{StaticResource NorButton}" Click="Button_SetCondition"/>
-
-
             <!-- Move/Test -->
-            <StackPanel Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="3" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,10,0,5" Visibility="{Binding Type, Converter={StaticResource TypePointVisibilityConverter}}">
+            <StackPanel Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="3" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,10,0,5" Visibility="{Binding Type, Converter={StaticResource TypePointVisibilityConverter}}">
                 <Button Style="{StaticResource NorButton}" Content="Show Pos." Width="80" VerticalAlignment="Bottom" Click="Button_Move"/>
                 <Button Style="{StaticResource NorButton}" Content="Try now" Width="80" VerticalAlignment="Top" Click="Button_Test"/>
                 <Button Style="{StaticResource NorButton}" Content="Adjust" Width="80" VerticalAlignment="Top" Click="Button_Adjust"/>
             </StackPanel>
 
+            <!-- Conditions -->
+            <TextBlock Grid.Row="8" Grid.Column="0" Text="Condition" HorizontalAlignment="Right" Style="{StaticResource left}"/>
+
+            <StackPanel Grid.Row="8" Grid.Column="1" 
+                        Orientation="Horizontal" Margin="0,0,5,0"
+                        VerticalAlignment="Center">
+                <RadioButton Content="None" IsChecked="{Binding ConditionList.Type, Converter={StaticResource EnumBooleanConverter}, ConverterParameter=NONE, Mode=TwoWay}" GroupName="ConditionType" Margin="4"/>
+                <RadioButton Content="Skip" IsChecked="{Binding ConditionList.Type, Converter={StaticResource EnumBooleanConverter}, ConverterParameter=SKIP, Mode=TwoWay}" GroupName="ConditionType" Margin="4"/>
+                <RadioButton Content="Wait" IsChecked="{Binding ConditionList.Type, Converter={StaticResource EnumBooleanConverter}, ConverterParameter=WAIT, Mode=TwoWay}" GroupName="ConditionType" Margin="4"/>
+            </StackPanel>
+            <Grid Grid.Row="9" Grid.Column="1"
+                Visibility="{Binding ConditionList.Type, Converter={StaticResource NegEnumVisibilityConverter}, ConverterParameter=NONE}"
+                >
+                <ListView 
+                      x:Name="ConditionListView" 
+                      ItemsSource="{Binding}" Margin="0,0,5,0" Height="100">
+                    <ListView.View >
+                        <GridView x:Name="ConditionGridView" ColumnHeaderContainerStyle="{StaticResource ListViewHeaderlessStyle}">
+                            <GridView.Columns >
+                                <GridViewColumn Width="100">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <StackPanel Orientation="Horizontal">
+                                                <Grid Width="20" Height="20" Visibility="{Binding IsValid, Converter={StaticResource BoolToVisibility}}">
+                                                    <Border BorderBrush="Black" BorderThickness="1">
+                                                        <Border.Background>
+                                                            <SolidColorBrush Color="{Binding ColorRange[8]}"/>
+                                                        </Border.Background>
+                                                    </Border>
+                                                </Grid>
+                                                <TextBlock Margin="4,0,0,0" Visibility="{Binding IsValid, Converter={StaticResource BoolToVisibility}}">
+                                                <Hyperlink Style="{StaticResource NoUnderlineHyperlink}" Click="onConditonCoordinateClicked">
+                                                    <Run>
+                                                        <Run.Text>
+                                                            <MultiBinding StringFormat="{}{0},{1}">
+                                                                <Binding Path="ScreenPoint.Point.X" Mode="OneWay"/>
+                                                                <Binding Path="ScreenPoint.Point.Y" Mode="OneWay"/>
+                                                            </MultiBinding>
+                                                        </Run.Text>
+                                                    </Run>
+                                                </Hyperlink>
+                                                </TextBlock>
+                                                <Button Style="{StaticResource MiniButton}" Click="onAddCondition" Visibility="{Binding IsValid, Converter={StaticResource NegBoolToVisibility}}">
+                                                    <Image Source="{StaticResource AddIcon}"/>
+                                                </Button>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                            </GridView.Columns>
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+            </Grid>
+            <Button Grid.Row="9" Grid.Column="2" Content="Del"  
+                Visibility="{Binding ConditionList.Type, Converter={StaticResource NegEnumVisibilityConverter}, ConverterParameter=NONE}"
+                Click="onDeleteSelectedConditions"
+                Style="{StaticResource NorButton}" VerticalAlignment="Bottom"/>
+
+            <StackPanel Grid.Row="10" Grid.Column="1" 
+                        Orientation="Horizontal" Margin="0,0,5,0"
+                        Visibility="{Binding ConditionList.IsMulti, Converter={StaticResource BoolToVisibility}}"
+                        VerticalAlignment="Center">
+                <RadioButton Content="AND" IsChecked="{Binding ConditionList.Combination, Converter={StaticResource EnumBooleanConverter}, ConverterParameter=AND, Mode=TwoWay}" GroupName="CombinationType" Margin="4"/>
+                <RadioButton Content="OR" IsChecked="{Binding ConditionList.Combination, Converter={StaticResource EnumBooleanConverter}, ConverterParameter=OR, Mode=TwoWay}" GroupName="CombinationType" Margin="4"/>
+            </StackPanel>
+
             <!-- Ok/Cancel -->
-            <StackPanel Grid.Row="9" Grid.Column="0" Grid.ColumnSpan="3" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,5,0,5">
+            <StackPanel Grid.Row="11" Grid.Column="0" Grid.ColumnSpan="3" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,5,0,5">
                 <Button Style="{StaticResource OkButton}" Content="OK" Width="80" IsDefault="True" Margin="0,0,10,0" VerticalAlignment="Bottom" Click="Button_Ok"/>
                 <Button Style="{StaticResource CancelButton}" Content="Cancel" Width="80" IsCancel="True" VerticalAlignment="Top" Click="Button_Cancel"/>
             </StackPanel>
@@ -141,5 +213,5 @@
             <view:PositionTuner x:Name="PositionTuner"/>
         </Grid>
     </Grid>
-    
+
 </UserControl>

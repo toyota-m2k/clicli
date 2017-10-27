@@ -26,17 +26,17 @@ namespace CliCliBoy.view
             public SampleColors()
             {
                 //mColorRange = new HSVColorRange();
-                mCondition = new ClickCondition();
+                mCondition = new ConditionList.Condition();
                 mRemainSec = GPTimerSec;
             }
 
-            private ClickCondition mCondition;
+            private ConditionList.Condition mCondition;
 
-            public ClickCondition Condition
+            public ConditionList.Condition Condition
             {
                 get { return mCondition; }
                 set {
-                    mCondition.CopyFrom(value);
+                    mCondition = value;
                 }
             }
 
@@ -162,7 +162,7 @@ namespace CliCliBoy.view
         private DialogHelper mDialogHelper;
         public IDialog Dialog { get { return mDialogHelper; } }
     
-        public ClickCondition Result
+        public ConditionList.Condition Result
         {
             get { return mSamplingContext.Condition; }
         }
@@ -221,15 +221,16 @@ namespace CliCliBoy.view
             }
         }
 
-        public void Init(ClickCondition condition, Point initialPoint )
+        public void Init(ConditionList.Condition condition, Point initialPoint )
         {
+            condition.IsValid = true;
             mSamplingContext.Reset();
             mSamplingContext.Condition = condition;
             mSamplingContext.SamplingPoint = condition.ScreenPoint.AbsolutePoint;
             mSamplingContext.NotifyColorChanged();
-            if (mSamplingContext.Condition.Type == ClickCondition.ConditionType.NONE)
+            if (!mSamplingContext.Condition.IsValid)
             {
-                mSamplingContext.Condition.Type = ClickCondition.ConditionType.SKIP;
+                mSamplingContext.Condition.IsValid = true;
                 if(mSamplingContext.SamplingPoint.X == 0 && mSamplingContext.SamplingPoint.Y==0)
                 {
                     mSamplingContext.SamplingPoint = initialPoint;

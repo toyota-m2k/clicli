@@ -45,7 +45,7 @@ namespace CliCliBoy.model
         private int mRepeat;
         private bool mModified;
         private ScreenPoint mScreenPoint;
-        private ClickCondition mCondition;
+        //private ClickCondition mCondition;
         private ConditionList mConditionList;
         private KeyType mPressKey;
 
@@ -58,14 +58,13 @@ namespace CliCliBoy.model
         [System.Xml.Serialization.XmlIgnore]
         public bool IsModified
         {
-            get { return mModified || mScreenPoint.IsModified || mCondition.IsModified || mConditionList.IsModified; }
+            get { return mModified || mScreenPoint.IsModified || mConditionList.IsModified; }
             set
             {
                 mModified = value;
                 if (!value)
                 {
                     mScreenPoint.IsModified = false;
-                    mCondition.IsModified = false;
                     mConditionList.IsModified = false;
                 }
             }
@@ -147,29 +146,17 @@ namespace CliCliBoy.model
             }
         }
 
-
-        public ClickCondition Condition
-        {
-            get { return mCondition; }
-            set
-            {
-                if (!mCondition.Equals(value))
-                {
-                    mCondition.CopyFrom(value);
-                    IsModified = true;
-                    notify("Condition");
-                }
-            }
-        }
-
         public ConditionList ConditionList
         {
             get { return mConditionList; }
             set
             {
-                mConditionList.CopyFrom(value);
-                notify("ConditionList");
-                IsModified = true;
+                if (!mConditionList.Equals(value))
+                {
+                    mConditionList.CopyFrom(value);
+                    notify("ConditionList");
+                    IsModified = true;
+                }
             }
         }
 
@@ -197,7 +184,6 @@ namespace CliCliBoy.model
         public void SetRatio(uint ratio)
         {
             ScreenPoint.Ratio = ratio;
-            Condition.ScreenPoint.Ratio = ratio;
             ConditionList.SetRatio(ratio);
         }
 
@@ -207,15 +193,14 @@ namespace CliCliBoy.model
             ScreenPoint.BasePoint = bp;
             ScreenPoint.AbsolutePoint = abs;
 
-            abs = Condition.ScreenPoint.AbsolutePoint;
-            Condition.ScreenPoint.BasePoint = bp;
-            Condition.ScreenPoint.AbsolutePoint = abs;
+            ConditionList.SetBasePointKeepAbs(bp);
         }
 
         public void TranslateBasePoint(Point bp)
         {
             ScreenPoint.BasePoint = bp;
-            Condition.ScreenPoint.BasePoint = bp;
+
+            ConditionList.TranslateBasePoint(bp);
         }
 
         public void SetBasePointAndRatioKeepAbs(Point bp, uint ratio)
@@ -225,10 +210,7 @@ namespace CliCliBoy.model
             ScreenPoint.Ratio = ratio;
             ScreenPoint.AbsolutePoint = abs;
 
-            abs = Condition.ScreenPoint.AbsolutePoint;
-            Condition.ScreenPoint.BasePoint = bp;
-            Condition.ScreenPoint.Ratio = ratio;
-            Condition.ScreenPoint.AbsolutePoint = abs;
+            ConditionList.SetBasePointAndRatioKeepAbs(bp, ratio);
         }
 
         public IClicker Clicker
@@ -323,7 +305,6 @@ namespace CliCliBoy.model
             mComment = "";
             mName = "";
             mWheelAmount = 0;
-            mCondition = new ClickCondition();
             mConditionList = new ConditionList();
             mScreenPoint = new ScreenPoint();
             mPressKey = KeyType.ESC;
@@ -358,7 +339,6 @@ namespace CliCliBoy.model
             mName = s.mName;
             mWheelAmount = s.mWheelAmount;
 
-            mCondition = new ClickCondition(s.Condition);
             mConditionList = new ConditionList(s.ConditionList);
             mScreenPoint = new ScreenPoint(s.ScreenPoint);
             mPressKey = s.mPressKey;
@@ -392,7 +372,7 @@ namespace CliCliBoy.model
             Name = s.Name;
             WheelAmount = s.WheelAmount;
 
-            Condition = s.Condition;
+            ConditionList = s.ConditionList;
             ScreenPoint = s.ScreenPoint;
             PressKey = s.PressKey;
 

@@ -72,11 +72,6 @@
 
                     </StackPanel>
                 </StackPanel>
-                <StackPanel Orientation="Vertical" Margin="10,0,0,0"  VerticalAlignment="Center">
-                    <RadioButton Content="Skip"  IsChecked="{Binding Condition.Type, Converter={StaticResource EnumBooleanConverter}, ConverterParameter=SKIP}"  GroupName="CondType"/>
-                    <RadioButton Content="Wait"  IsChecked="{Binding Condition.Type, Converter={StaticResource EnumBooleanConverter}, ConverterParameter=WAIT}"    GroupName="CondType"/>
-                    <RadioButton Content="None"  IsChecked="{Binding Condition.Type, Converter={StaticResource EnumBooleanConverter}, ConverterParameter=NONE}"   GroupName="CondType"/>
-                </StackPanel>
             </StackPanel>
             
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">

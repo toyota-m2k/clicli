@@ -767,12 +767,15 @@ namespace CliCliBoy
                 return;
             }
             var target = ((FrameworkElement)sender).DataContext as TargetItem;
-            if (null != target && target.Condition.Type!=ClickCondition.ConditionType.NONE)
+            if (null != target && target.ConditionList.HasCondition)
             {
                 StringBuilder sb = new StringBuilder(DebugOutput.Text);
-                MouseCursorWindow.Instance.DecisionEnabled = true;
-                MouseCursorWindow.Instance.Decision = target.Condition.Decide(sb);
-                MouseCursorWindow.Instance.ShowAt(target.Condition.ScreenPoint.AbsolutePoint, 3);
+                if (!target.ConditionList.IsMulti)
+                {
+                    MouseCursorWindow.Instance.DecisionEnabled = true;
+                    MouseCursorWindow.Instance.Decision = target.ConditionList.Decide(sb);
+                    MouseCursorWindow.Instance.ShowAt(target.ConditionList.List[0].ScreenPoint.AbsolutePoint, 3);
+                }
                 DebugOutput.Text = sb.ToString();
                 DebugOutput.ScrollToEnd();
             }
@@ -1286,9 +1289,9 @@ namespace CliCliBoy
             TargetListView.SelectedItems.Clear();
             foreach( TargetItem item in TargetListView.Items)
             {
-                if(item.Condition.Type != ClickCondition.ConditionType.NONE)
+                if(item.ConditionList.HasCondition)
                 {
-                    if(item.Condition.Decide(sb))
+                    if(item.ConditionList.Decide(sb))
                     {
                         TargetListView.SelectedItems.Add(item);
                     }
@@ -1303,7 +1306,7 @@ namespace CliCliBoy
             mContext.Projects.ClearUtilizationCounter();
             if (null == mUtilizationColumn)
             {
-                mUtilizationColumn = TargetListView.TryFindResource("glidViewUtilizationColumn") as GridViewColumn;
+                mUtilizationColumn = TargetListView.TryFindResource("gridViewUtilizationColumn") as GridViewColumn;
             }
             if(null!=mUtilizationColumn)
             {

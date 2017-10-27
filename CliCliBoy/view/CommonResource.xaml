@@ -17,9 +17,10 @@
     <local:VisibilityHiddenTrueConverter x:Key="VisibilityHiddenTrueConverter"/>
     <local:TypeNameConverter x:Key="TypeNameConverter"/>
     <local:EnumBooleanConverter x:Key="EnumBooleanConverter" />
-    <local:NegEnumVisibilityConverter x:Key="NegEnumBooleanConverter" />
+    <local:NegEnumVisibilityConverter x:Key="NegEnumVisibilityConverter" />
     <local:EnumVisibilityConverter x:Key="EnumVisibilityConverter" />
     <local:TypePointVisibilityConverter x:Key="TypePointVisibilityConverter" />
+    <local:IntToVisibilityConverter x:Key="IntToVisibilityConverter" />
 
     <SolidColorBrush x:Key="DlgBg" Color="#FFEAFFBC" />
     <SolidColorBrush x:Key="ButtonBg" Color="#FFFFE8B0" />
@@ -142,6 +143,14 @@
         <Setter Property="BorderThickness" Value="3"/>
     </Style>
 
+    <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}" x:Key="MiniButton">
+        <Setter Property="Background" Value="{StaticResource TBtnBg}"/>
+        <Setter Property="Padding" Value="2"/>
+        <Setter Property="Width" Value="24"/>
+        <Setter Property="Height" Value="20"/>
+        <Setter Property="Margin" Value="0"/>
+    </Style>
+
     <!-- Menu Button のスタイル-->
     <Style x:Key="MenuButton" TargetType="{x:Type ToggleButton}">
         <Setter Property="Template">
@@ -194,5 +203,25 @@
         </ObjectDataProvider.MethodParameters>
     </ObjectDataProvider>
 
+    <ObjectDataProvider x:Key="ClickTypes" MethodName="GetValues" 
+                            ObjectType="{x:Type system:Enum}">
+        <ObjectDataProvider.MethodParameters>
+            <x:Type TypeName="model:ClickType"/>
+        </ObjectDataProvider.MethodParameters>
+    </ObjectDataProvider>
+
+    <Style x:Key="ListViewHeaderlessStyle" TargetType="{x:Type GridViewColumnHeader}">
+        <Setter Property="Visibility" Value="Collapsed"/>
+    </Style>
+
+    <Style x:Key="NoUnderlineHyperlink" TargetType="{x:Type Hyperlink}">
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Foreground" Value="DarkSlateBlue" />
+            </Trigger>
+        </Style.Triggers>
+        <Setter Property="Foreground" Value="SteelBlue" />
+        <Setter Property="TextBlock.TextDecorations" Value="{x:Null}" />
+    </Style>
 
 </ResourceDictionary>

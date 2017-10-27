@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -15,20 +16,9 @@ namespace CliCliBoy.model
          */
         public class Condition : Notifier
         {
-            #region Type Definition
-
-            public enum ActionType
-            {
-                NONE,   // 条件設定は無効
-                WAIT,   // 条件を満たすまで待機
-                SKIP,   // 条件を満たさなければ、次へ進む
-            }
-
-            #endregion
-
             #region Private Fields
 
-            private ActionType mType;
+            private bool mValid = false;
             private bool mNegation;
             private ScreenPoint mScreenPoint;
             private HSVColorRange mColorRange;
@@ -40,7 +30,7 @@ namespace CliCliBoy.model
 
             public Condition()
             {
-                mType = ActionType.NONE;
+                mValid = false;
                 mNegation = false;
                 mColorRange = new HSVColorRange();
                 mScreenPoint = new ScreenPoint();
@@ -49,7 +39,7 @@ namespace CliCliBoy.model
 
             public Condition(Condition s)
             {
-                mType = s.Type;
+                mValid = s.mValid;
                 mNegation = s.Negation;
                 mColorRange = s.ColorRange.Clone();
                 mScreenPoint = s.ScreenPoint.Clone();
@@ -58,7 +48,7 @@ namespace CliCliBoy.model
 
             public void Clear()
             {
-                Type = ActionType.NONE;
+                mValid = false;
                 mNegation = false;
                 ColorRange.Clear();
                 mScreenPoint = new ScreenPoint();
@@ -71,7 +61,7 @@ namespace CliCliBoy.model
                     Clear();
                     return;
                 }
-                Type = s.Type;
+                mValid = s.mValid;
                 ColorRange = s.ColorRange;
                 ScreenPoint = s.ScreenPoint;
                 IsModified = true;
@@ -81,6 +71,7 @@ namespace CliCliBoy.model
             {
                 return new Condition(this);
             }
+
             #endregion
 
             #region Comparison
@@ -91,7 +82,7 @@ namespace CliCliBoy.model
                 {
                     return false;
                 }
-                return c.Type == Type && c.ScreenPoint == ScreenPoint && c.ColorRange == ColorRange && c.Negation == Negation;
+                return c.mValid == mValid && c.ScreenPoint == ScreenPoint && c.ColorRange == ColorRange && c.Negation == Negation;
             }
 
             public override bool Equals(Object c)
@@ -128,21 +119,6 @@ namespace CliCliBoy.model
             #endregion
 
             #region Properties
-
-            public ActionType Type
-            {
-                get { return mType; }
-                set
-                {
-                    if (mType != value)
-                    {
-                        mType = value;
-                        notify("Type");
-                        notify("ConditionSummary");
-                        IsModified = true;
-                    }
-                }
-            }
 
             public bool Negation
             {
@@ -186,21 +162,12 @@ namespace CliCliBoy.model
                 }
             }
 
-            [System.Xml.Serialization.XmlIgnore]
-            public string ConditionSummary
+            public bool IsValid
             {
-                get
-                {
-                    switch (Type)
-                    {
-                        default:
-                        case ActionType.NONE:
-                            return "None";
-                        case ActionType.SKIP:
-                            return "Skip";
-                        case ActionType.WAIT:
-                            return "Wait";
-                    }
+                get { return mValid; }
+                set {
+                    mValid = value;
+                    notify("IsValid");
                 }
             }
 
@@ -258,15 +225,25 @@ namespace CliCliBoy.model
         }
         public enum ConditionCombination
         {
-            CMB_AND,
-            CMB_OR,
+            AND,
+            OR,
         }
+
+        public enum ActionType
+        {
+            NONE = 0,
+            SKIP = 1,
+            WAIT = 2,
+        }
+
+
         #endregion
 
         #region Private Fields
 
         private ObservableCollection<Condition> mList;
         private ConditionCombination mCombination;
+        private ActionType mType;
         private bool mModified;
         private static readonly Condition sDefaultCondition = new Condition();
 
@@ -277,14 +254,19 @@ namespace CliCliBoy.model
         public ConditionList()
         {
             mList = new ObservableCollection<Condition>();
-            mCombination = ConditionCombination.CMB_AND;
+            mCombination = ConditionCombination.AND;
+            mType = ActionType.SKIP;
             mModified = false;
         }
         public ConditionList(ConditionList s)
         {
             mList = new ObservableCollection<Condition>();
-            mCombination = ConditionCombination.CMB_AND;
-            CopyFrom(s);
+            foreach (var c in s.List)
+            {
+                mList.Add(c.Clone());
+            }
+            mCombination = s.Combination;
+            mType = s.mType;
             mModified = false;
         }
 
@@ -295,11 +277,8 @@ namespace CliCliBoy.model
                 Clear();
                 return;
             }
-            mList.Clear();
-            foreach(var c in s.List)
-            {
-                mList.Add(c.Clone());
-            }
+            mList = s.mList;
+            mType = s.mType;
             Combination = s.Combination;
             mModified = true;
         }
@@ -316,8 +295,41 @@ namespace CliCliBoy.model
                 mList.Clear();
                 mModified = true;
             }
-            Combination = ConditionCombination.CMB_AND;
+            Combination = ConditionCombination.AND;
+            mType = ActionType.SKIP;
         }
+
+        public void PrepareForEditing()
+        {
+            int count = mList.Count;
+            if (count == 0 || mList[count-1].IsValid)
+            {
+                mList.Add(new Condition());
+            }
+        }
+
+        public void TrimAfterEditing()
+        {
+            if (mType == ActionType.NONE)
+            {
+                mList.Clear();
+            }
+            else
+            {
+                for (int i = mList.Count - 1; i >= 0; i--)
+                {
+                    if (!mList[i].IsValid)
+                    {
+                        mList.RemoveAt(i);
+                    }
+                }
+                if(0==mList.Count)
+                {
+                    Type = ActionType.NONE;
+                }
+            }
+        }
+
         #endregion
 
         #region Properties
@@ -334,6 +346,23 @@ namespace CliCliBoy.model
                     IsModified = true;
                     mCombination = value;
                     notify("Combination");
+                }
+            }
+        }
+
+        public ActionType Type
+        {
+            get
+            {
+                return mType;
+            }
+            set
+            {
+                if(mType!=value)
+                {
+                    mType = value;
+                    notify("Type");
+                    IsModified = true;
                 }
             }
         }
@@ -409,6 +438,38 @@ namespace CliCliBoy.model
         }
         #endregion
 
+        #region Comparison
+
+        public bool Equals(ConditionList c)
+        {
+            if (null == c)
+            {
+                return false;
+            }
+            if( mCombination != c.Combination)
+            {
+                return false;
+            }
+            if(mList.Equals(c.List))
+            {
+                return true;
+            }
+            if(mList.Count!=c.List.Count)
+            {
+                return false;
+            }
+            for(int i=0, ci=mList.Count;i<ci;i++)
+            {
+                if(mList[i]!=c.List[i])
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        #endregion
+
         #region Conditional Test
         public bool Decide(StringBuilder sb = null)
         {
@@ -420,24 +481,24 @@ namespace CliCliBoy.model
             {
                 if (c.Decide(sb))
                 {
-                    if(mCombination==ConditionCombination.CMB_OR)
+                    if(mCombination==ConditionCombination.OR)
                     {
                         return true;
                     }
                 }
                 else
                 {
-                    if (mCombination == ConditionCombination.CMB_AND)
+                    if (mCombination == ConditionCombination.AND)
                     {
                         return false;
                     }
                 }
             }
-            return mCombination == ConditionCombination.CMB_AND;
+            return mCombination == ConditionCombination.AND;
         }
         #endregion
 
-        #region Modification
+        #region Coordination
         public void SetRatio(uint ratio)
         {
             foreach(var c in mList)
@@ -445,6 +506,89 @@ namespace CliCliBoy.model
                 c.ScreenPoint.Ratio = ratio;
             }
         }
+
+        public void SetBasePointKeepAbs(Point bp)
+        {
+            foreach(var c in mList)
+            {
+                Point abs = c.ScreenPoint.AbsolutePoint;
+                c.ScreenPoint.BasePoint = bp;
+                c.ScreenPoint.AbsolutePoint = abs;
+            }
+
+        }
+
+        public void TranslateBasePoint(Point bp)
+        {
+            foreach (var c in mList)
+            {
+                c.ScreenPoint.BasePoint = bp;
+            }
+        }
+
+        public void SetBasePointAndRatioKeepAbs(Point bp, uint ratio)
+        {
+            foreach (var c in mList)
+            {
+                Point abs = c.ScreenPoint.AbsolutePoint;
+                c.ScreenPoint.BasePoint = bp;
+                c.ScreenPoint.Ratio = ratio;
+                c.ScreenPoint.AbsolutePoint = abs;
+            }
+        }
+
+        #endregion
+
+        #region List Operation
+        public void Add(Condition condition)
+        {
+            condition.IsValid = true;
+            int count = mList.Count;
+            if (count > 0 && !mList[count - 1].IsValid)
+            {
+                mList.Insert(count - 1, condition);
+            }
+            else
+            {
+                mList.Add(condition);
+            }
+            notify("IsMulti");
+            notify("HasCondition");
+        }
+
+        public void Remove(Condition condition)
+        {
+            if(!condition.IsValid)
+            {
+                return;
+            }
+            mList.Remove(condition);
+            IsModified = true;
+            notify("IsMulti");
+            notify("HasCondition");
+        }
+
+        public void Remove(IList conditions)
+        {
+            bool modified = false;
+            foreach(Condition c in conditions)
+            {
+                if (!c.IsValid)
+                {
+                    continue;
+                }
+                mList.Remove(c);
+                modified = true;
+            }
+
+            if (modified)
+            {
+                IsModified = true;
+                notify("IsMulti");
+                notify("HasCondition");
+            }
+        }
+
         #endregion
     }
 }

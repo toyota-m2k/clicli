@@ -113,17 +113,12 @@ namespace CliCliBoy.model
                 var startItem = item;
                 while (true)
                 {
-                    if (item.Condition.Type == ClickCondition.ConditionType.NONE)
+                    if (item.ConditionList.Decide())
                     {
                         return true;
                     }
 
-                    if (item.Condition.Decide())
-                    {
-                        return true;
-                    }
-
-                    if (item.Condition.Type == ClickCondition.ConditionType.WAIT)
+                    if (item.ConditionList.Type == ConditionList.ActionType.WAIT)
                     {
                         //retryAfter();
                         item = null;

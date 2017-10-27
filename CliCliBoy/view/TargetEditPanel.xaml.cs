@@ -1,7 +1,9 @@
 ﻿using CliCliBoy.interop;
 using CliCliBoy.model;
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -45,6 +47,11 @@ namespace CliCliBoy.view
             mSettingTarget = new TargetItem();
             mSettingTarget.Type = ClickType.NOOP;
             this.DataContext = mSettingTarget;
+
+            mSettingTarget.ConditionList.PrepareForEditing();
+            CollectionViewSource source = new CollectionViewSource();
+            source.Source = mSettingTarget.ConditionList.List;
+            this.ConditionListView.DataContext = source;
         }
 
         public void InitByTarget(TargetItem target)
@@ -52,11 +59,20 @@ namespace CliCliBoy.view
             mSettingTarget = new TargetItem(target);
             //mSettingTarget.ScreenPoint.ResetBasePoint();
             this.DataContext = mSettingTarget;
+
+            mSettingTarget.ConditionList.PrepareForEditing();
+            CollectionViewSource source = new CollectionViewSource();
+            source.Source = mSettingTarget.ConditionList.List;
+            this.ConditionListView.DataContext = source;
         }
 
         public TargetItem Result
         {
-            get { return mSettingTarget; }
+            get
+            {
+                mSettingTarget.ConditionList.TrimAfterEditing();
+                return mSettingTarget;
+            }
         }
 
         public void SetPoint()
@@ -135,24 +151,24 @@ namespace CliCliBoy.view
             }
         }
 
-        private void Button_SetCondition(object sender, RoutedEventArgs e)
-        {
-            SamplingColorPanel.Dialog.Show((dlg)=>
-            {
-                mSettingTarget.Condition = SamplingColorPanel.Result;
-            }, (dlg)=>
-            {
-                this.Visibility = Visibility.Visible;
-            });
-            SamplingColorPanel.Init(mSettingTarget.Condition, mSettingTarget.ScreenPoint.AbsolutePoint);
-            this.Visibility = Visibility.Hidden;
-        }
+        //private void Button_SetCondition(object sender, RoutedEventArgs e)
+        //{
+        //    SamplingColorPanel.Dialog.Show((dlg)=>
+        //    {
+        //        mSettingTarget.Condition = SamplingColorPanel.Result;
+        //    }, (dlg)=>
+        //    {
+        //        this.Visibility = Visibility.Visible;
+        //    });
+        //    SamplingColorPanel.Init(mSettingTarget.Condition, mSettingTarget.ScreenPoint.AbsolutePoint);
+        //    this.Visibility = Visibility.Hidden;
+        //}
 
         private void Button_TryDecide(object sender, RoutedEventArgs e)
         {
-            MouseCursorWindow.Instance.DecisionEnabled = true;
-            MouseCursorWindow.Instance.Decision = mSettingTarget.Condition.Decide();
-            MouseCursorWindow.Instance.ShowAt(mSettingTarget.Condition.ScreenPoint.AbsolutePoint, 3);
+            //MouseCursorWindow.Instance.DecisionEnabled = true;
+            //MouseCursorWindow.Instance.Decision = mSettingTarget.Condition.Decide();
+            //MouseCursorWindow.Instance.ShowAt(mSettingTarget.Condition.ScreenPoint.AbsolutePoint, 3);
 
         }
 
@@ -177,6 +193,40 @@ namespace CliCliBoy.view
             }
             TargetEditSub.Visibility = Visibility.Hidden;
             TargetEditMain.Visibility = Visibility.Visible;
+        }
+
+        private void onConditonCoordinateClicked(object sender, RoutedEventArgs e)
+        {
+            // Debug.WriteLine("Condition Clicked");
+            var condition = ((FrameworkContentElement)sender).DataContext as ConditionList.Condition;
+            if(null!=condition)
+            {
+                MouseCursorWindow.Instance.DecisionEnabled = true;
+                MouseCursorWindow.Instance.Decision = condition.Decide();
+                MouseCursorWindow.Instance.ShowAt(condition.ScreenPoint.AbsolutePoint, 3);
+            }
+        }
+
+        private void onAddCondition(object sender, RoutedEventArgs e)
+        {
+            Debug.WriteLine("Condition Add");
+
+            SamplingColorPanel.Dialog.Show((dlg) =>
+            {
+                mSettingTarget.ConditionList.Add(SamplingColorPanel.Result);
+            }, (dlg) =>
+            {
+                this.Visibility = Visibility.Visible;
+            });
+            SamplingColorPanel.Init(new ConditionList.Condition(), mSettingTarget.ScreenPoint.AbsolutePoint);
+            this.Visibility = Visibility.Hidden;
+        }
+
+        private void onDeleteSelectedConditions(object sender, RoutedEventArgs e)
+        {
+            Array ary = new ArrayList();
+            ConditionListView.SelectedItems.CopyTo(ary, 0);
+            mSettingTarget.ConditionList.Remove(ary);
         }
     }
 }
