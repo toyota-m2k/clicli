@@ -187,6 +187,12 @@
                             </GridView.Columns>
                         </GridView>
                     </ListView.View>
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="ListViewItem">
+                            <EventSetter Event="PreviewMouseLeftButtonUp" Handler="ListViewItem_PreviewMouseLeftButtonUp" />
+                        </Style>
+                    </ListView.ItemContainerStyle>
+
                 </ListView>
             </Grid>
             <Button Grid.Row="9" Grid.Column="2" Content="Del"  

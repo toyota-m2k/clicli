@@ -205,6 +205,7 @@ namespace CliCliBoy.view
                 MouseCursorWindow.Instance.Decision = condition.Decide();
                 MouseCursorWindow.Instance.ShowAt(condition.ScreenPoint.AbsolutePoint, 3);
             }
+            Debug.WriteLine("HyperLink Click");
         }
 
         private void onAddCondition(object sender, RoutedEventArgs e)
@@ -224,9 +225,40 @@ namespace CliCliBoy.view
 
         private void onDeleteSelectedConditions(object sender, RoutedEventArgs e)
         {
-            Array ary = new ArrayList();
-            ConditionListView.SelectedItems.CopyTo(ary, 0);
-            mSettingTarget.ConditionList.Remove(ary);
+            var selected = ConditionListView.SelectedItems;
+            if (selected.Count > 0)
+            {
+                var sel = new List<ConditionList.Condition>(selected.Count);
+                foreach(ConditionList.Condition c in selected)
+                {
+                    sel.Add(c);
+                }
+                mSettingTarget.ConditionList.Remove(sel);
+            }
+
+        }
+
+        private void ListViewItem_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            if(e.OriginalSource is Hyperlink)
+            {
+                e.Handled = false;
+                return;
+            }
+
+            var item = sender as ListViewItem;
+            if (item != null)
+            {
+                if (item.IsSelected)
+                {
+                    //Do your stuff
+                    Debug.WriteLine("Selected ListItem Click");
+                }
+                else
+                {
+                    Debug.WriteLine("ListItem Click");
+                }
+            }
         }
     }
 }

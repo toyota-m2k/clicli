@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -568,10 +569,10 @@ namespace CliCliBoy.model
             notify("HasCondition");
         }
 
-        public void Remove(IList conditions)
+        public void Remove(List<Condition> conditions)
         {
             bool modified = false;
-            foreach(Condition c in conditions)
+            foreach(var c in conditions)
             {
                 if (!c.IsValid)
                 {
