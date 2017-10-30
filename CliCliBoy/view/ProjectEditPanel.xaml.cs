@@ -78,8 +78,7 @@ namespace CliCliBoy.view
 
         private void Button_ShowPos(object sender, RoutedEventArgs e)
         {
-            MouseCursorWindow.Instance.DecisionEnabled = false;
-            MouseCursorWindow.Instance.ShowAt(mSettingProject.Mode.BasePoint, 3);
+            MouseCursorWindow.Show(mSettingProject.Mode.BasePoint);
         }
 
         private void Button_Adjust(object sender, RoutedEventArgs e)

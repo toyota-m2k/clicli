@@ -37,9 +37,10 @@ namespace CliCliBoy.view
                 get { return mCondition; }
                 set {
                     mCondition = value;
+                    SamplingPoint = value.ScreenPoint.AbsolutePoint;
+                    notify("Condition");
                 }
             }
-
 
             //private HSVColorRange mColorRange;
             //public HSVColorRange ColorRange
@@ -223,10 +224,9 @@ namespace CliCliBoy.view
 
         public void Init(ConditionList.Condition condition, Point initialPoint )
         {
-            condition.IsValid = true;
             mSamplingContext.Reset();
             mSamplingContext.Condition = condition;
-            mSamplingContext.SamplingPoint = condition.ScreenPoint.AbsolutePoint;
+            // mSamplingContext.SamplingPoint = condition.ScreenPoint.AbsolutePoint;
             mSamplingContext.NotifyColorChanged();
             if (!mSamplingContext.Condition.IsValid)
             {
@@ -414,10 +414,7 @@ namespace CliCliBoy.view
         private void Btn_MoveTo(object sender, RoutedEventArgs e)
         {
             //MouseEmulator.MoveTo(mSamplingContext.SamplingPoint);
-            var cw = MouseCursorWindow.Instance;
-            cw.Decision = mSamplingContext.Condition.TestAt(mSamplingContext.SamplingPoint);
-            cw.DecisionEnabled = true;
-            cw.ShowAt(mSamplingContext.SamplingPoint, 5);
+            MouseCursorWindow.Show(mSamplingContext.SamplingPoint, mSamplingContext.Condition.TestAt(mSamplingContext.SamplingPoint, null, true));
 
         }
 

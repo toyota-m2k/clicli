@@ -53,6 +53,9 @@
     <BitmapImage x:Key="RelIcon" UriSource="../resources/rel.png"/>
     <BitmapImage x:Key="WaitIcon" UriSource="../resources/wait.png"/>
     <BitmapImage x:Key="SkipIcon" UriSource="../resources/skip.png"/>
+    <BitmapImage x:Key="NotIcon" UriSource="../resources/not.png"/>
+    <BitmapImage x:Key="MoreIcon" UriSource="../resources/more.png"/>
+    <BitmapImage x:Key="BlankIcon" UriSource="../resources/blank.png"/>
 
 
     <BitmapImage x:Key="FoldUpIcon" UriSource="../resources/fold.png"/>
@@ -118,6 +121,12 @@
     <Style TargetType="Button">
         <Setter Property="Background" Value="White"/>
         <Setter Property="Template" Value="{StaticResource BtnTemplate}"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="Focusable" Value="False"/>
+    </Style>
+
+    <Style TargetType="Button" x:Key="PlainButton">
+        <Setter Property="Background" Value="White"/>
         <Setter Property="Cursor" Value="Hand"/>
         <Setter Property="Focusable" Value="False"/>
     </Style>

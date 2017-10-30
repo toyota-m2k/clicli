@@ -12,7 +12,7 @@ namespace CliCliBoy.model
     /**
      * プロジェクトクラス
      */
-    public class Project : Notifier, ITargetWinPosProp
+    public class Project : Notifier, ITargetWinPosProp, IVersioning
     {
         // fields...
         private PointingMode mMode;     // pointing mode + base point
@@ -313,6 +313,14 @@ namespace CliCliBoy.model
             foreach(var v in mTargets)
             {
                 v.UtilizationCount = 0;
+            }
+        }
+
+        public void OnVersionUp(int fromVersion)
+        {
+            foreach(var t in Targets)
+            {
+                t.OnVersionUp(fromVersion);
             }
         }
     }

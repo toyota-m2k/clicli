@@ -14,7 +14,12 @@ using System.Windows.Data;
 
 namespace CliCliBoy.model
 {
-    public class Manager : Notifier
+    public interface IVersioning
+    {
+        void OnVersionUp(int fromVersion);
+    }
+
+    public class Manager : Notifier, IVersioning
     {
         #region fields
         
@@ -27,7 +32,36 @@ namespace CliCliBoy.model
         private bool mIsPlaying;
         private HotKeyDriver mHotKeyDriver;
         private List<int> mSelectedProjectIds;
-        
+
+        private class DefaultDebugOutput : IDebugOutput
+        {
+            public string Prefix
+            {
+                get; set;
+            }
+
+            public void Clear()
+            {
+            }
+
+            public void Flush()
+            {
+            }
+
+            public void Put(string s)
+            {
+                if(null!=Prefix && Prefix.Length>0)
+                {
+                    Debug.WriteLine(Prefix + s);
+                }
+                else
+                {
+                    Debug.WriteLine(s);
+                }
+            }
+
+        }
+
         private static readonly string[] sPropsDependOnProject = { "CurrentProject", "CurrentTargets", "IsMargedTarget", "IsSingleProjectSelection", "NoProjectSelected", "IsRelative" };
         
         #endregion
@@ -46,8 +80,15 @@ namespace CliCliBoy.model
             mPlayers = new PlayerList();
             mHotKeyDriver = new HotKeyDriver();
             mSelectedProjectIds = new List<int>(8);
+            DebugOutput = new DefaultDebugOutput();
         }
 
+
+        [System.Xml.Serialization.XmlIgnore]
+        public IDebugOutput DebugOutput
+        {
+            get; set;
+        }
         /**
          * Viewへの参照、イベントハンドラなどを接続する
          */
@@ -87,6 +128,13 @@ namespace CliCliBoy.model
                 mMainWindow.SetTarget(null);
             }
         }
+
+        public static int CURRENT_VERSION = 1;
+        public int Version
+        {
+            get; set;
+        } = 0;
+
         #endregion
 
         #region View References (Properties)
@@ -660,11 +708,14 @@ namespace CliCliBoy.model
 
                 //XMLファイルから読み込み、逆シリアル化する
                 obj = serializer.Deserialize(sr);
+                var mang = obj as Manager;
 
-                if( obj is Manager)
+                if( null!=mang)
                 {
-                    ((Manager)obj).IsModified = false;
-                    ((Manager)obj).Projects.CheckAndRepairNextId();
+                    mang.IsModified = false;
+                    mang.Projects.CheckAndRepairNextId();
+
+                    mang.OnVersionUp(mang.Version);
                 }
             }
             catch (Exception e)
@@ -702,5 +753,16 @@ namespace CliCliBoy.model
             mProjects.ClearUtilizationCounter();
         }
 
+        public void OnVersionUp(int fromVersion)
+        {
+            if(fromVersion<CURRENT_VERSION)
+            {
+                foreach(var p in Projects.Projects)
+                {
+                    p.OnVersionUp(fromVersion);
+                }
+                Version = CURRENT_VERSION;
+            }
+        }
     }
 }

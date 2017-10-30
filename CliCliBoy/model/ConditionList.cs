@@ -188,12 +188,12 @@ namespace CliCliBoy.model
             #endregion
 
             #region Condition Test
-            public bool Decide(StringBuilder sb = null)
+            public bool Decide(IDebugOutput dbgout, bool ignoreNegation)
             {
-                return TestAt(ScreenPoint.AbsolutePoint, sb);
+                return TestAt(ScreenPoint.AbsolutePoint, dbgout, ignoreNegation);
             }
 
-            public bool TestAt(Point absPoint, StringBuilder sb = null)
+            public bool TestAt(Point absPoint, IDebugOutput dbgout, bool ignoreNegation)
             {
                 try
                 {
@@ -203,21 +203,21 @@ namespace CliCliBoy.model
                         {
                             g.CopyFromScreen(absPoint, new Point(0, 0), new System.Drawing.Size(1, 1));
                             var color = myBitmap.GetPixel(0, 0);
-                            var result = ColorRange.IsInRange(color, sb);
-                            return mNegation ? !result : result;
+                            var result = ColorRange.IsInRange(color, dbgout);
+                            return ignoreNegation ? result : (mNegation ? !result : result);
                         }
                     }
                 }
                 catch (Win32Exception ex)
                 {
-                    Debug.WriteLine(ex.ToString());
+                    dbgout.Put(ex.ToString());
                     return false;
                 }
                 catch (Exception e2)
                 {
                     //Debug.WriteLine(e2.ToString());
-                    Globals.Logger.Output(e2.ToString());
-                    Globals.Logger.Output(absPoint.ToString());
+                    dbgout.Put(e2.ToString());
+                    dbgout.Put(absPoint.ToString());
                     return false;
                 }
             }
@@ -256,7 +256,7 @@ namespace CliCliBoy.model
         {
             mList = new ObservableCollection<Condition>();
             mCombination = ConditionCombination.AND;
-            mType = ActionType.SKIP;
+            mType = ActionType.NONE;
             mModified = false;
         }
         public ConditionList(ConditionList s)
@@ -306,6 +306,10 @@ namespace CliCliBoy.model
             if (count == 0 || mList[count-1].IsValid)
             {
                 mList.Add(new Condition());
+            }
+            if (Type == ActionType.NONE)
+            {
+                Type = ActionType.SKIP;
             }
         }
 
@@ -472,7 +476,7 @@ namespace CliCliBoy.model
         #endregion
 
         #region Conditional Test
-        public bool Decide(StringBuilder sb = null)
+        public bool Decide(IDebugOutput dbgout, bool ignoreNegation)
         {
             if (mList.Count == 0)
             {
@@ -480,7 +484,7 @@ namespace CliCliBoy.model
             }
             foreach (var c in mList)
             {
-                if (c.Decide(sb))
+                if (c.Decide(dbgout, ignoreNegation))
                 {
                     if(mCombination==ConditionCombination.OR)
                     {
@@ -555,6 +559,26 @@ namespace CliCliBoy.model
             }
             notify("IsMulti");
             notify("HasCondition");
+            IsModified = true;
+        }
+
+        public void Update(Condition original, Condition updated)
+        {
+            if(original==updated)
+            {
+                return;
+            }
+
+            int index = mList.IndexOf(original);
+            if(index>=0)
+            {
+                mList[index] = updated;
+                IsModified = true;
+            }
+            else
+            {
+                Add(updated);
+            }
         }
 
         public void Remove(Condition condition)

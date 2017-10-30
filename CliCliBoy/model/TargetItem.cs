@@ -33,7 +33,7 @@ namespace CliCliBoy.model
         Return = MouseEmulator.VK_RETURN,
     }
 
-    public class TargetItem : Notifier
+    public class TargetItem : Notifier, IVersioning
     {
 
 
@@ -45,7 +45,7 @@ namespace CliCliBoy.model
         private int mRepeat;
         private bool mModified;
         private ScreenPoint mScreenPoint;
-        //private ClickCondition mCondition;
+        private ClickCondition mCondition;
         private ConditionList mConditionList;
         private KeyType mPressKey;
 
@@ -156,6 +156,20 @@ namespace CliCliBoy.model
                     mConditionList.CopyFrom(value);
                     notify("ConditionList");
                     IsModified = true;
+                }
+            }
+        }
+
+        public ClickCondition Condition
+        {
+            get { return mCondition; }
+            set
+            {
+                if (!mCondition.Equals(value))
+                {
+                    mCondition.CopyFrom(value);
+                    IsModified = true;
+                    notify("Condition");
                 }
             }
         }
@@ -305,6 +319,7 @@ namespace CliCliBoy.model
             mComment = "";
             mName = "";
             mWheelAmount = 0;
+            mCondition = new ClickCondition();
             mConditionList = new ConditionList();
             mScreenPoint = new ScreenPoint();
             mPressKey = KeyType.ESC;
@@ -411,6 +426,32 @@ namespace CliCliBoy.model
         {
             UtilizationCount++;
         }
-    }
 
+        public void OnVersionUp(int fromVersion)
+        {
+            if(null== Condition)
+            {
+                return;
+            }
+
+            if(Condition.Type!=ClickCondition.ConditionType.NONE && !ConditionList.HasCondition)
+            {
+                var c = new ConditionList.Condition();
+                if (Condition.Type == ClickCondition.ConditionType.WAIT)
+                {
+                    ConditionList.Type = ConditionList.ActionType.WAIT;
+                }
+                else if (Condition.Type == ClickCondition.ConditionType.SKIP)
+                {
+                    ConditionList.Type = ConditionList.ActionType.SKIP;
+                }
+
+                c.ColorRange = Condition.ColorRange;
+                c.ScreenPoint = Condition.ScreenPoint;
+                c.IsValid = true;
+                c.IsModified = true;
+                ConditionList.Add(c);
+            }
+        }
+    }
 }

@@ -22,43 +22,48 @@
             </CheckBox>
 
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,15,0,5">
-                <Border BorderBrush="Gray" BorderThickness="1" HorizontalAlignment="Center" VerticalAlignment="Center">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="20"/>
-                            <ColumnDefinition Width="20"/>
-                            <ColumnDefinition Width="20"/>
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="20"/>
-                            <RowDefinition Height="20"/>
-                            <RowDefinition Height="20"/>
-                        </Grid.RowDefinitions>
-                        <Grid Grid.Row="0" Grid.Column="0" Background="{Binding [0]}"/>
-                        <Grid Grid.Row="0" Grid.Column="1" Background="{Binding [1]}"/>
-                        <Grid Grid.Row="0" Grid.Column="2" Background="{Binding [4]}"/>
-                        <Grid Grid.Row="1" Grid.Column="0" Background="{Binding [3]}"/>
-                        <Grid Grid.Row="1" Grid.Column="1" Background="{Binding [8]}"/>
-                        <Grid Grid.Row="1" Grid.Column="2" Background="{Binding [6]}"/>
-                        <Grid Grid.Row="2" Grid.Column="0" Background="{Binding [3]}"/>
-                        <Grid Grid.Row="2" Grid.Column="1" Background="{Binding [5]}"/>
-                        <Grid Grid.Row="2" Grid.Column="2" Background="{Binding [7]}"/>
-                    </Grid>
-                </Border>
-                <StackPanel Orientation="Vertical" Margin="10,0,0,0"  VerticalAlignment="Bottom">
-                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
-                        <TextBlock VerticalAlignment="Center">
-                            <TextBlock.Text>
-                                <MultiBinding StringFormat="Sampling at ({0},{1})">
-                                    <Binding Path="SamplingPoint.X" />
-                                    <Binding Path="SamplingPoint.Y" />
-                                </MultiBinding>
-                            </TextBlock.Text>
-                        </TextBlock>
-                    </StackPanel>
+                <StackPanel Orientation="Vertical" VerticalAlignment="Top">
+                    <Border BorderBrush="Gray" BorderThickness="1" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="20"/>
+                                <ColumnDefinition Width="20"/>
+                                <ColumnDefinition Width="20"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="20"/>
+                                <RowDefinition Height="20"/>
+                                <RowDefinition Height="20"/>
+                            </Grid.RowDefinitions>
+                            <Grid Grid.Row="0" Grid.Column="0" Background="{Binding [0]}"/>
+                            <Grid Grid.Row="0" Grid.Column="1" Background="{Binding [1]}"/>
+                            <Grid Grid.Row="0" Grid.Column="2" Background="{Binding [4]}"/>
+                            <Grid Grid.Row="1" Grid.Column="0" Background="{Binding [3]}"/>
+                            <Grid Grid.Row="1" Grid.Column="1" Background="{Binding [8]}"/>
+                            <Grid Grid.Row="1" Grid.Column="2" Background="{Binding [6]}"/>
+                            <Grid Grid.Row="2" Grid.Column="0" Background="{Binding [3]}"/>
+                            <Grid Grid.Row="2" Grid.Column="1" Background="{Binding [5]}"/>
+                            <Grid Grid.Row="2" Grid.Column="2" Background="{Binding [7]}"/>
+                        </Grid>
+                    </Border>
+                    <CheckBox Content="NOT" IsChecked="{Binding Condition.Negation, Mode=TwoWay}" Margin="0,4,0,0"/>
+                </StackPanel>
+                <StackPanel Orientation="Vertical" Margin="10,0,0,0"  VerticalAlignment="Top">
+                    <TextBlock>
+                        <Run Text="Position: "/>
+                        <Hyperlink Click="Btn_MoveTo">
+                            <Run>
+                                <Run.Text>
+                                    <MultiBinding StringFormat="{}{0},{1}">
+                                        <Binding Path="SamplingPoint.X" Mode="OneWay"/>
+                                        <Binding Path="SamplingPoint.Y" Mode="OneWay" />
+                                    </MultiBinding>
+                                </Run.Text>
+                            </Run>
+                        </Hyperlink>
+                    </TextBlock>
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="0,5,0,0">
-                        <Button Style="{StaticResource NorButton}" Content="Show Pos." Margin="0,0,0,0" Click="Btn_MoveTo"/>
-                        <Button Style="{StaticResource NorButton}" Content="Adjust" Margin="5,0,0,0" Padding="8,0" Click="Btn_Adjust"/>
+                        <Button Style="{StaticResource NorButton}" Content="Adjust" Margin="0,0,0,0" Padding="8,4" Click="Btn_Adjust"/>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
                         <TextBlock Text="Sampling Size" Margin="0,0,10,0"/>

@@ -89,6 +89,10 @@
     <Compile Include="model\ClipboardUtil.cs" />
     <Compile Include="model\TargetWinPos.cs" />
     <Compile Include="view\DropDownButton.cs" />
+    <Compile Include="view\Dummy.xaml.cs">
+      <DependentUpon>Dummy.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="model\IDebugOutput.cs" />
     <Compile Include="view\MouseCursorWindow.xaml.cs">
       <DependentUpon>MouseCursorWindow.xaml</DependentUpon>
     </Compile>
@@ -119,6 +123,9 @@
     <Compile Include="interop\MouseEmulator.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="model\TargetItem.cs" />
+    <Compile Include="view\ConditionView.xaml.cs">
+      <DependentUpon>ConditionView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="view\TargetEditPanel.xaml.cs">
       <DependentUpon>TargetEditPanel.xaml</DependentUpon>
     </Compile>
@@ -147,6 +154,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="view\Dummy.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="view\MouseCursorWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -168,6 +179,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="view\DialogResource.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="view\ConditionView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -291,6 +306,11 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="resources\menu.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="resources\blank.png" />
+    <Resource Include="resources\more.png" />
+    <Resource Include="resources\not.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

@@ -66,27 +66,27 @@ namespace CliCliBoy.view
             Visibility = Visibility.Hidden;
         }
 
-        private static MouseCursorWindow sInstance;
-        public static MouseCursorWindow Instance
-        {
-            get
-            {
-                if (null == sInstance)
-                {
-                    sInstance = new MouseCursorWindow();
-                }
-                return sInstance;
-            }
-        }
+        //private static MouseCursorWindow sInstance;
+        //public static MouseCursorWindow Instance
+        //{
+        //    get
+        //    {
+        //        if (null == sInstance)
+        //        {
+        //            sInstance = new MouseCursorWindow();
+        //        }
+        //        return sInstance;
+        //    }
+        //}
 
-        public static void Terminate()
-        {
-            if(null!=sInstance)
-            {
-                sInstance.Close();
-                sInstance = null;
-            }
-        }
+        //public static void Terminate()
+        //{
+        //    if(null!=sInstance)
+        //    {
+        //        sInstance.Close();
+        //        sInstance = null;
+        //    }
+        //}
 
         public void SetPos(System.Drawing.Point pos)
         {
@@ -108,9 +108,10 @@ namespace CliCliBoy.view
                 return;
             }
 
-            if (sec == 0)
+            if (sec <= 0)
             {
-                Visibility = Visibility.Visible;
+                //Visibility = Visibility.Visible;
+                sec = 3; 
             }
             else
             {
@@ -122,7 +123,8 @@ namespace CliCliBoy.view
                     if (mWatchCount >= mLastCount)
                     {
                         timer.Stop();
-                        Visibility = Visibility.Hidden;
+                        //Visibility = Visibility.Hidden;
+                        Close();
                     }
                 };
                 timer.Start();
@@ -130,9 +132,25 @@ namespace CliCliBoy.view
             }
         }
 
-        public void Dismiss()
+        //public void Dismiss()
+        //{
+        //    Visibility = Visibility.Hidden;
+        //}
+
+        public static void Show(System.Drawing.Point pos)
         {
-            Visibility = Visibility.Hidden;
+            var w = new MouseCursorWindow();
+            w.DecisionEnabled = false;
+            w.ShowAt(pos, 3);
         }
+
+        public static void Show(System.Drawing.Point pos, bool decision)
+        {
+            var w = new MouseCursorWindow();
+            w.DecisionEnabled = true;
+            w.Decision = decision;
+            w.ShowAt(pos, 3);
+        }
+
     }
 }

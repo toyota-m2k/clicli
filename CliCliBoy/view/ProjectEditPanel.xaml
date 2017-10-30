@@ -8,7 +8,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <UserControl.Resources>
-        <ResourceDictionary Source="CommonResource.xaml"/>
+        <ResourceDictionary Source="DialogResource.xaml"/>
     </UserControl.Resources>
 
     <Grid>
@@ -28,9 +28,6 @@
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
-            <Grid.Resources>
-                <ResourceDictionary Source="DialogResource.xaml"/>
-            </Grid.Resources>
 
             <!-- Title -->
             <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Padding="4" Text="Project Settings" Margin="0,10" Background="{StaticResource DlgTitleBg}"/>

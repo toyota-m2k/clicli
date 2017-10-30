@@ -406,9 +406,7 @@ namespace CliCliBoy.view
 
         private void Btn_ShowPos(object sender, RoutedEventArgs e)
         {
-            var mc = MouseCursorWindow.Instance;
-            mc.DecisionEnabled = false;
-            mc.ShowAt(mGPData.OrgPoint, 5);
+            MouseCursorWindow.Show(mGPData.OrgPoint);
         }
 
         private void Btn_ClearTargetWinPos(object sender, RoutedEventArgs e)

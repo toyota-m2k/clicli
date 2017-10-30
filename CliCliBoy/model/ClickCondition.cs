@@ -145,9 +145,9 @@ namespace CliCliBoy.model
         }
 
 
-        public bool Decide(StringBuilder sb = null)
+        public bool Decide(IDebugOutput dbgout= null)
         {
-            return TestAt(ScreenPoint.AbsolutePoint, sb);
+            return TestAt(ScreenPoint.AbsolutePoint, dbgout);
             //try
             //{
             //    Bitmap myBitmap = new Bitmap(1, 1);
@@ -162,7 +162,7 @@ namespace CliCliBoy.model
             //}
         }
 
-        public bool TestAt(Point absPoint, StringBuilder sb=null)
+        public bool TestAt(Point absPoint, IDebugOutput dbgout=null)
         {
             try
             {
@@ -172,7 +172,7 @@ namespace CliCliBoy.model
                     {
                         g.CopyFromScreen(absPoint, new Point(0, 0), new System.Drawing.Size(1, 1));
                         var color = myBitmap.GetPixel(0, 0);
-                        return ColorRange.IsInRange(color, sb);
+                        return ColorRange.IsInRange(color, dbgout);
                     }
                 }
             }
@@ -184,8 +184,8 @@ namespace CliCliBoy.model
             catch(Exception e2)
             {
                 //Debug.WriteLine(e2.ToString());
-                Globals.Logger.Output(e2.ToString());
-                Globals.Logger.Output(absPoint.ToString());
+                dbgout.Put(e2.ToString());
+                dbgout.Put(absPoint.ToString());
                 return false;
             }
         }

@@ -30,7 +30,7 @@ namespace CliCliBoy
     /// <summary>
     /// MainWindow.xaml の相互作用ロジック
     /// </summary>
-    public partial class MainWindow : Window, Logger
+    public partial class MainWindow : Window
     {
         /**
          * ビューの状態
@@ -48,6 +48,72 @@ namespace CliCliBoy
         private Status mStatus;         // ビューの状態（currentStatusプロパティの中の人）
         private Manager mContext;       // バインドするデータのおやびん
 
+        private class MainDebugOutput : IDebugOutput
+        {
+            public string Prefix { get; set; } = null;
+            public StringBuilder mSb = new StringBuilder();
+            private WeakReference<MainWindow> mMainWindow;
+
+            public MainDebugOutput(MainWindow owner)
+            {
+                mMainWindow = new WeakReference<MainWindow>(owner);
+            }
+
+            private MainWindow Owner
+            {
+                get
+                {
+                    MainWindow owner;
+                    return mMainWindow.TryGetTarget(out owner) ? owner : null;
+                }
+            }
+
+            public void Clear()
+            {
+                mSb.Clear();
+                Prefix = null;
+                var owner = Owner;
+                if (null != owner)
+                {
+                    owner.DebugOutput.Text = "";
+                }
+            }
+
+            public void Flush()
+            {
+                if(mSb.Length>0)
+                {
+                    String text = mSb.ToString();
+                    if (Globals.Instance.DataContext.CheckMode)
+                    {
+                        var owner = Owner;
+                        if (null != owner)
+                        {
+                            owner.DebugOutput.AppendText(text);
+                            owner.DebugOutput.ScrollToEnd();
+                        }
+                    }
+                    Debug.Write(text);
+                }
+                mSb.Clear();
+            }
+
+            public void Put(string s)
+            {
+                if (null != Prefix && Prefix.Length > 0)
+                {
+                    mSb.Append(Prefix);
+                }
+                mSb.AppendLine(s);
+            }
+
+            public void PutAndFlush(string s)
+            {
+                Put(s);
+                Flush();
+            }
+        }
+
         /**
          * コンストラクタ
          */
@@ -57,6 +123,7 @@ namespace CliCliBoy
             mStatus = Status.INITIAL;
             mContext = Globals.Instance.DataContext;
             mContext.BindView(this);
+            mContext.DebugOutput = new MainDebugOutput(this);
             EditTargetPanel.SamplingColorPanel = SamplingColor;
             this.DataContext = mContext;
         }
@@ -96,7 +163,7 @@ namespace CliCliBoy
             {
                 HandleFileSave(sender, null);
             }
-            MouseCursorWindow.Terminate();
+            // MouseCursorWindow.Terminate();
         }
 
 
@@ -755,11 +822,17 @@ namespace CliCliBoy
             var target = ((FrameworkElement)sender).DataContext as TargetItem;
             if (null != target)
             {
-                MouseCursorWindow.Instance.DecisionEnabled = false;
-                MouseCursorWindow.Instance.ShowAt(target.Clicker.ClickPoint, 3);
+                MouseCursorWindow.Show(target.Clicker.ClickPoint);
             }
         }
 
+        private IDebugOutput DbgOut
+        {
+            get
+            {
+                return Globals.Instance.DataContext.DebugOutput;
+            }
+        }
         private void ConditionPointCheck(object sender, MouseButtonEventArgs e)
         {
             if (!mContext.CheckMode)
@@ -769,26 +842,44 @@ namespace CliCliBoy
             var target = ((FrameworkElement)sender).DataContext as TargetItem;
             if (null != target && target.ConditionList.HasCondition)
             {
-                StringBuilder sb = new StringBuilder(DebugOutput.Text);
-                if (!target.ConditionList.IsMulti)
+                if (target.ConditionList.IsMulti)
                 {
-                    MouseCursorWindow.Instance.DecisionEnabled = true;
-                    MouseCursorWindow.Instance.Decision = target.ConditionList.Decide(sb);
-                    MouseCursorWindow.Instance.ShowAt(target.ConditionList.List[0].ScreenPoint.AbsolutePoint, 3);
+                    bool decision = target.ConditionList.Decide(DbgOut, false);
+
+                    DbgOut.Put(String.Format("{0} --- condition content", decision ? "TRUE" : "FALSE"));
+                    DbgOut.Prefix = "    ";
+                    foreach (var c in target.ConditionList.List)
+                    {
+                        MouseCursorWindow.Show(c.ScreenPoint.AbsolutePoint, c.Decide(DbgOut, false));
+                        DbgOut.Put("--");
+                    }
+                    DbgOut.Prefix = null;
+                    DbgOut.Put("--");
                 }
-                DebugOutput.Text = sb.ToString();
-                DebugOutput.ScrollToEnd();
+                else
+                {
+                    bool decision = target.ConditionList.Decide(DbgOut, false);
+                    MouseCursorWindow.Show(target.ConditionList.Head.ScreenPoint.AbsolutePoint, decision);
+                }
+                //if (!target.ConditionList.IsMulti)
+                //{
+
+                //    MouseCursorWindow.Instance.DecisionEnabled = true;
+                //    MouseCursorWindow.Instance.Decision = target.ConditionList.Decide(sb);
+                //    MouseCursorWindow.Instance.ShowAt(target.ConditionList.List[0].ScreenPoint.AbsolutePoint, 3);
+                //}
+                DbgOut.Flush();
             }
         }
 
-        public void Output(string msg)
-        {
-            Debug.WriteLine(msg);
-            StringBuilder sb = new StringBuilder(DebugOutput.Text);
-            sb.AppendLine(msg);
-            DebugOutput.Text = sb.ToString();
-            DebugOutput.ScrollToEnd();
-        }
+        //public void Output(string msg)
+        //{
+        //    Debug.WriteLine(msg);
+        //    StringBuilder sb = new StringBuilder(DebugOutput.Text);
+        //    sb.AppendLine(msg);
+        //    DebugOutput.Text = sb.ToString();
+        //    DebugOutput.ScrollToEnd();
+        //}
 
         /**
          * キー操作/SCメニュー用コマンド定義
@@ -849,6 +940,8 @@ namespace CliCliBoy
             ProjectListView.SelectedItems.Clear();
             foreach(var item in items)
             {
+                ((Project)item).OnVersionUp(0);
+
                 index++;
                 mContext.Projects.InsertProject(index, (Project)item);
                 ProjectListView.SelectedItems.Add(item);
@@ -1133,19 +1226,18 @@ namespace CliCliBoy
         private void checkMode_Checked(object sender, RoutedEventArgs e)
         {
             TargetGrid.RowDefinitions[2].Height = new GridLength(mDebugOutputHeight);
-            Globals.Logger = this;
+            DbgOut.Clear();
         }
 
         private void checkMode_Unchecked(object sender, RoutedEventArgs e)
         {
-            Globals.Logger = null;
             var v = TargetGrid.RowDefinitions[2].Height.Value;
             if(v>0)
             {
                 mDebugOutputHeight = v;
             }
-            DebugOutput.Text = "";  // クリアボタンを用意するのが面倒なので、offにするときにクリアしてみる。
             TargetGrid.RowDefinitions[2].Height = new GridLength(0d);
+            DbgOut.Clear();
         }
 
         private void HandleFileNew(object sender, ExecutedRoutedEventArgs e)
@@ -1285,19 +1377,18 @@ namespace CliCliBoy
         private void BtnTestAll_Click(object sender, RoutedEventArgs e)
         {
             mContext.PlayStop();
-            var sb = new StringBuilder();
             TargetListView.SelectedItems.Clear();
             foreach( TargetItem item in TargetListView.Items)
             {
                 if(item.ConditionList.HasCondition)
                 {
-                    if(item.ConditionList.Decide(sb))
+                    if(item.ConditionList.Decide(DbgOut, false))
                     {
                         TargetListView.SelectedItems.Add(item);
                     }
                 }
             }
-            DebugOutput.Text = sb.ToString();
+            DbgOut.Flush();
         }
 
         private GridViewColumn mUtilizationColumn = null;
@@ -1319,6 +1410,19 @@ namespace CliCliBoy
             if(null!=mUtilizationColumn)
             {
                 TargetGridView.Columns.Remove(mUtilizationColumn);
+            }
+        }
+
+        private void BtnShowMoreCondition(object sender, RoutedEventArgs e)
+        {
+            var s = sender as FrameworkElement;
+            if (null != s)
+            {
+                var t = s.DataContext as TargetItem;
+                if (null != t)
+                {
+                    ConditionView.Show(t.ConditionList, GetWindow(this), s);
+                }
             }
         }
     }

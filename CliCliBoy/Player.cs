@@ -113,7 +113,7 @@ namespace CliCliBoy.model
                 var startItem = item;
                 while (true)
                 {
-                    if (item.ConditionList.Decide())
+                    if (item.ConditionList.Decide(null, false))
                     {
                         return true;
                     }

@@ -138,15 +138,15 @@ namespace CliCliBoy.model
          * 無彩色とみなすS値の上限（経験値）
          */
         private const float ACHROMATIC_COLOR_SATULATION = 0.1f;
-        public bool IsInRange(System.Drawing.Color color, StringBuilder sb=null)
+        public bool IsInRange(System.Drawing.Color color, IDebugOutput dbgout=null)
         {
             var hsv = HSVColor.FromColor(color);
 
 #if DEBUG
-            Debug.WriteLine("HSV range test...");
-            Debug.WriteLine("    H: {3} : {0}  range({1} -- {2}", hsv.H, H.Min, H.Max, H.IsInRange(hsv.H) ? "TRUE " : "FALSE");
-            Debug.WriteLine("    S: {3} : {0}  range({1} -- {2}", hsv.S, S.Min, S.Max, S.IsInRange(hsv.S) ? "TRUE " : "FALSE");
-            Debug.WriteLine("    V: {3} : {0}  range({1} -- {2}", hsv.V, V.Min, V.Max, V.IsInRange(hsv.V) ? "TRUE " : "FALSE");
+            //Debug.WriteLine("HSV range test...");
+            //Debug.WriteLine("    H: {3} : {0}  range({1} -- {2}", hsv.H, H.Min, H.Max, H.IsInRange(hsv.H) ? "TRUE " : "FALSE");
+            //Debug.WriteLine("    S: {3} : {0}  range({1} -- {2}", hsv.S, S.Min, S.Max, S.IsInRange(hsv.S) ? "TRUE " : "FALSE");
+            //Debug.WriteLine("    V: {3} : {0}  range({1} -- {2}", hsv.V, V.Min, V.Max, V.IsInRange(hsv.V) ? "TRUE " : "FALSE");
 #endif
             bool h = H.IsInRange(hsv.H),
                  s = S.IsInRange(hsv.S),
@@ -160,26 +160,26 @@ namespace CliCliBoy.model
             }
 
 
-            if (sb != null)
+            if (dbgout!= null)
             {
                 if (result)
                 {
-                    sb.AppendLine("TRUE ----");
+                    dbgout.Put("TRUE ----");
                 }
                 else
                 {
-                    sb.AppendLine("FALSE ---");
+                    dbgout.Put("FALSE ---");
                 }
                 if (result && !h)
                 {
-                    sb.AppendFormat(" - H: {0}  range({1} - {2})... ignored (achromatic color)", hsv.H, H.Min, H.Max).AppendLine();
+                    dbgout.Put(String.Format(" - H: {0}  range({1} - {2})... ignored (achromatic color)", hsv.H, H.Min, H.Max));
                 }
                 else 
                 {
-                    sb.AppendFormat(" {3} H: {0}  range({1} - {2})", hsv.H, H.Min, H.Max, h ? "o" : "x").AppendLine();
+                    dbgout.Put(String.Format(" {3} H: {0}  range({1} - {2})", hsv.H, H.Min, H.Max, h ? "o" : "x"));
                 }
-                sb.AppendFormat(" {3} S: {0}  range({1} - {2})", hsv.S, S.Min, S.Max, s ? "o" : "x").AppendLine();
-                sb.AppendFormat(" {3} V: {0}  range({1} - {2})", hsv.V, V.Min, V.Max, v ? "o" : "x").AppendLine();
+                dbgout.Put(String.Format(" {3} S: {0}  range({1} - {2})", hsv.S, S.Min, S.Max, s ? "o" : "x"));
+                dbgout.Put(String.Format(" {3} V: {0}  range({1} - {2})", hsv.V, V.Min, V.Max, v ? "o" : "x"));
                 return result;
             }
             else

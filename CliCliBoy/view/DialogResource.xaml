@@ -1,11 +1,16 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-    <Style x:Key="left" TargetType="{x:Type TextBlock}">
-        <Setter Property="Margin" Value="0,5,10,5" />
-        <Setter Property="HorizontalAlignment" Value="Right"/>
-    </Style>
-    <Style x:Key="right" TargetType="{x:Type FrameworkElement}">
-        <Setter Property="Margin" Value="0,5,5,5" />
-    </Style>
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="CommonResource.xaml"/>
+        <ResourceDictionary>
+            <Style x:Key="left" TargetType="{x:Type TextBlock}">
+                <Setter Property="Margin" Value="0,5,10,5" />
+                <Setter Property="HorizontalAlignment" Value="Right"/>
+            </Style>
+            <Style x:Key="right" TargetType="{x:Type FrameworkElement}">
+                <Setter Property="Margin" Value="0,5,5,5" />
+            </Style>
+        </ResourceDictionary>
+    </ResourceDictionary.MergedDictionaries>
 
 </ResourceDictionary>

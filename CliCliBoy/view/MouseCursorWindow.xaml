@@ -13,6 +13,8 @@
         Title="MouseCaptureWindow" 
         Height="60" 
         Width="60"
+        Focusable="False"
+        ShowActivated="False"
         mc:Ignorable="d"
         >
     <Grid>

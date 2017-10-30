@@ -127,9 +127,7 @@ namespace CliCliBoy.view
         private void Button_Move(object sender, RoutedEventArgs e)
         {
             //MouseEmulator.MoveTo(mSettingTarget.Clicker.ClickPoint);
-            var cm = MouseCursorWindow.Instance;
-            cm.DecisionEnabled = false;
-            cm.ShowAt(mSettingTarget.Clicker.ClickPoint, 5);
+            MouseCursorWindow.Show(mSettingTarget.Clicker.ClickPoint);
         }
 
         private void Button_Test(object sender, RoutedEventArgs e)
@@ -187,7 +185,7 @@ namespace CliCliBoy.view
 
         private void OnPositionCompleted(bool flag, PositionTuner pt)
         {
-            if(flag)
+            if (flag)
             {
                 mSettingTarget.Clicker.ClickPoint = pt.Result;
             }
@@ -195,23 +193,16 @@ namespace CliCliBoy.view
             TargetEditMain.Visibility = Visibility.Visible;
         }
 
-        private void onConditonCoordinateClicked(object sender, RoutedEventArgs e)
+        private void showConditionPosition(ConditionList.Condition condition)
         {
-            // Debug.WriteLine("Condition Clicked");
-            var condition = ((FrameworkContentElement)sender).DataContext as ConditionList.Condition;
-            if(null!=condition)
+            if (null != condition)
             {
-                MouseCursorWindow.Instance.DecisionEnabled = true;
-                MouseCursorWindow.Instance.Decision = condition.Decide();
-                MouseCursorWindow.Instance.ShowAt(condition.ScreenPoint.AbsolutePoint, 3);
+                MouseCursorWindow.Show(condition.ScreenPoint.AbsolutePoint, condition.Decide(null, true));
             }
-            Debug.WriteLine("HyperLink Click");
         }
 
-        private void onAddCondition(object sender, RoutedEventArgs e)
+        private void addCondition()
         {
-            Debug.WriteLine("Condition Add");
-
             SamplingColorPanel.Dialog.Show((dlg) =>
             {
                 mSettingTarget.ConditionList.Add(SamplingColorPanel.Result);
@@ -223,24 +214,54 @@ namespace CliCliBoy.view
             this.Visibility = Visibility.Hidden;
         }
 
-        private void onDeleteSelectedConditions(object sender, RoutedEventArgs e)
+        private void editCondition(ConditionList.Condition condition)
         {
-            var selected = ConditionListView.SelectedItems;
-            if (selected.Count > 0)
+            SamplingColorPanel.Dialog.Show((dlg) =>
             {
-                var sel = new List<ConditionList.Condition>(selected.Count);
-                foreach(ConditionList.Condition c in selected)
+                mSettingTarget.ConditionList.Update(condition, SamplingColorPanel.Result);
+            }, (dlg) =>
+            {
+                this.Visibility = Visibility.Visible;
+            });
+            SamplingColorPanel.Init(condition.Clone(), mSettingTarget.ScreenPoint.AbsolutePoint);
+            this.Visibility = Visibility.Hidden;
+        }
+
+
+        private void deleteCondition(IList conditions)
+        {
+            if (conditions.Count > 0)
+            {
+                var sel = new List<ConditionList.Condition>(conditions.Count);
+                foreach (ConditionList.Condition c in conditions)
                 {
                     sel.Add(c);
                 }
                 mSettingTarget.ConditionList.Remove(sel);
             }
+        }
 
+
+        private void onConditonCoordinateClicked(object sender, RoutedEventArgs e)
+        {
+            var condition = ((FrameworkContentElement)sender).DataContext as ConditionList.Condition;
+            showConditionPosition(condition);
+        }
+
+        private void onAddCondition(object sender, RoutedEventArgs e)
+        {
+            addCondition();
+        }
+
+        private void onDeleteSelectedConditions(object sender, RoutedEventArgs e)
+        {
+            var selected = ConditionListView.SelectedItems;
+            deleteCondition(selected);
         }
 
         private void ListViewItem_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
-            if(e.OriginalSource is Hyperlink)
+            if (e.OriginalSource is Hyperlink)
             {
                 e.Handled = false;
                 return;
@@ -249,16 +270,29 @@ namespace CliCliBoy.view
             var item = sender as ListViewItem;
             if (item != null)
             {
-                if (item.IsSelected)
+                var condition = item.DataContext as ConditionList.Condition;
+                if(null!=condition && !condition.IsValid)
                 {
-                    //Do your stuff
-                    Debug.WriteLine("Selected ListItem Click");
-                }
-                else
-                {
-                    Debug.WriteLine("ListItem Click");
+                    addCondition();
                 }
             }
+        }
+        private void ListViewItem_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            var item = sender as ListViewItem;
+            if (null != item)
+            {
+                var condition = item.DataContext as ConditionList.Condition;
+                if (null != condition)
+                {
+                    editCondition(condition);
+                }
+            }
+        }
+
+        private void onEditSelectedConditions(object sender, RoutedEventArgs e)
+        {
+            editCondition(ConditionListView.SelectedItem as ConditionList.Condition);
         }
     }
 }
