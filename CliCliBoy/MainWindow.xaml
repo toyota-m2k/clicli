@@ -544,23 +544,18 @@
                                 <GridViewColumn Header="Point (abs)" Width="100">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
-                                            <Grid MouseLeftButtonDown="TargetPointCheck" Height="24" HorizontalAlignment="Stretch">
-                                                <Grid.Style>
-                                                    <Style>
-                                                        <Style.Triggers>
-                                                            <DataTrigger Binding="{Binding ElementName=checkMode, Path=IsChecked}" Value="True">
-                                                                <Setter Property="Grid.Background" Value="#FFFDD98D"/>
-                                                            </DataTrigger>
-                                                        </Style.Triggers>
-                                                    </Style>
-                                                </Grid.Style>
+                                            <Grid Height="24" HorizontalAlignment="Stretch">
                                                 <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center">
-                                                    <TextBlock.Text>
-                                                        <MultiBinding StringFormat="{}{0},{1}">
-                                                            <Binding Path="ScreenPoint.AbsolutePoint.X" />
-                                                            <Binding Path="ScreenPoint.AbsolutePoint.Y" />
-                                                        </MultiBinding>
-                                                    </TextBlock.Text>
+                                                    <Hyperlink Style="{StaticResource NoUnderlineHyperlink}" Click="Hyperlink_TargetPos">
+                                                        <Run>
+                                                            <Run.Text>
+                                                                <MultiBinding StringFormat="{}{0},{1}">
+                                                                    <Binding Path="ScreenPoint.AbsolutePoint.X" Mode="TwoWay" />
+                                                                    <Binding Path="ScreenPoint.AbsolutePoint.Y" Mode="TwoWay" />
+                                                                </MultiBinding>
+                                                            </Run.Text>
+                                                        </Run>
+                                                    </Hyperlink>
                                                 </TextBlock>
                                             </Grid>
                                         </DataTemplate>
@@ -598,11 +593,11 @@
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
 
-                                <GridViewColumn Header="Condition" Width="180">
+                                <GridViewColumn Header="Condition" Width="160">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
 
-                                            <Grid HorizontalAlignment="Stretch" MouseLeftButtonDown="ConditionPointCheck">
+                                            <Grid HorizontalAlignment="Stretch">
                                                 <Grid.Style>
                                                     <Style>
                                                         <Style.Triggers>
@@ -641,12 +636,16 @@
                                                         Grid.Column="1"
                                                         Visibility="{Binding ConditionList.Type, Converter={StaticResource NegEnumVisibilityConverter}, ConverterParameter=NONE}"
                                                         HorizontalAlignment="Center" VerticalAlignment="Center">
-                                                        <TextBlock.Text>
-                                                            <MultiBinding StringFormat="{}{0},{1}">
-                                                                <Binding Path="ConditionList.Head.ScreenPoint.AbsolutePoint.X" />
-                                                                <Binding Path="ConditionList.Head.ScreenPoint.AbsolutePoint.Y" />
-                                                            </MultiBinding>
-                                                        </TextBlock.Text>
+                                                        <Hyperlink Style="{StaticResource NoUnderlineHyperlink}" Click="Hyperlink_ConditionPos">
+                                                            <Run>
+                                                                <Run.Text>
+                                                                    <MultiBinding StringFormat="{}{0},{1}">
+                                                                        <Binding Path="ConditionList.Head.ScreenPoint.AbsolutePoint.X" />
+                                                                        <Binding Path="ConditionList.Head.ScreenPoint.AbsolutePoint.Y" />
+                                                                    </MultiBinding>
+                                                                </Run.Text>
+                                                            </Run>
+                                                        </Hyperlink>
                                                     </TextBlock>
                                                     <Grid 
                                                         Grid.Column="2"

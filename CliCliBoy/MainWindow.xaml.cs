@@ -813,62 +813,11 @@ namespace CliCliBoy
 
         #endregion
 
-        private void TargetPointCheck(object sender, MouseButtonEventArgs e)
-        {
-            if (!mContext.CheckMode)
-            {
-                return;
-            }
-            var target = ((FrameworkElement)sender).DataContext as TargetItem;
-            if (null != target)
-            {
-                MouseCursorWindow.Show(target.Clicker.ClickPoint);
-            }
-        }
-
         private IDebugOutput DbgOut
         {
             get
             {
                 return Globals.Instance.DataContext.DebugOutput;
-            }
-        }
-        private void ConditionPointCheck(object sender, MouseButtonEventArgs e)
-        {
-            if (!mContext.CheckMode)
-            {
-                return;
-            }
-            var target = ((FrameworkElement)sender).DataContext as TargetItem;
-            if (null != target && target.ConditionList.HasCondition)
-            {
-                if (target.ConditionList.IsMulti)
-                {
-                    bool decision = target.ConditionList.Decide(DbgOut, false);
-
-                    DbgOut.Put(String.Format("{0} --- condition content", decision ? "TRUE" : "FALSE"));
-                    DbgOut.Prefix = "    ";
-                    foreach (var c in target.ConditionList.List)
-                    {
-                        MouseCursorWindow.Show(c.ScreenPoint.AbsolutePoint, c.Decide(DbgOut, false));
-                        DbgOut.Put("--");
-                    }
-                    DbgOut.Prefix = null;
-                    DbgOut.Put("--");
-                }
-                else
-                {
-                    bool decision = target.ConditionList.Decide(DbgOut, false);
-                    MouseCursorWindow.Show(target.ConditionList.Head.ScreenPoint.AbsolutePoint, decision);
-                }
-                //if (!target.ConditionList.IsMulti)
-                //{
-
-                //    MouseCursorWindow.Instance.DecisionEnabled = true;
-                //    MouseCursorWindow.Instance.Decision = target.ConditionList.Decide(sb);
-                //    MouseCursorWindow.Instance.ShowAt(target.ConditionList.List[0].ScreenPoint.AbsolutePoint, 3);
-                //}
-                DbgOut.Flush();
             }
         }
 
@@ -1423,6 +1372,43 @@ namespace CliCliBoy
                 {
                     ConditionView.Show(t.ConditionList, GetWindow(this), s);
                 }
+            }
+        }
+
+        private void Hyperlink_ConditionPos(object sender, RoutedEventArgs e)
+        {
+            var target = ((FrameworkContentElement)sender).DataContext as TargetItem;
+            if (null != target && target.ConditionList.HasCondition)
+            {
+                if (target.ConditionList.IsMulti)
+                {
+                    bool decision = target.ConditionList.Decide(DbgOut, false);
+
+                    DbgOut.Put(String.Format("{0} --- condition content", decision ? "TRUE" : "FALSE"));
+                    DbgOut.Prefix = "    ";
+                    foreach (var c in target.ConditionList.List)
+                    {
+                        MouseCursorWindow.Show(c.ScreenPoint.AbsolutePoint, c.Decide(DbgOut, false));
+                        DbgOut.Put("--");
+                    }
+                    DbgOut.Prefix = null;
+                    DbgOut.Put("--");
+                }
+                else
+                {
+                    bool decision = target.ConditionList.Decide(DbgOut, false);
+                    MouseCursorWindow.Show(target.ConditionList.Head.ScreenPoint.AbsolutePoint, decision);
+                }
+                DbgOut.Flush();
+            }
+        }
+
+        private void Hyperlink_TargetPos(object sender, RoutedEventArgs e)
+        {
+            var target = ((FrameworkContentElement)sender).DataContext as TargetItem;
+            if (null != target)
+            {
+                MouseCursorWindow.Show(target.Clicker.ClickPoint);
             }
         }
     }
