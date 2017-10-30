@@ -934,8 +934,9 @@ namespace CliCliBoy
             {
 
                 var dlg = new Microsoft.Win32.SaveFileDialog();
-                dlg.FileName = "clicli.cli";
-                dlg.Filter = "Cli Files(*.cli)|*.cli|All Files(*.*)|*.*";
+                dlg.FileName = "clicli.clp";
+                dlg.Filter = "Cli Proj Files(*.clp)|*.clp;*.cli|All Files(*.*)|*.*";
+                dlg.DefaultExt = "clp";
                 dlg.RestoreDirectory = true;
                 if (dlg.ShowDialog() == true)
                 {
@@ -973,7 +974,8 @@ namespace CliCliBoy
         {
             var dlg = new Microsoft.Win32.OpenFileDialog();
             dlg.FileName = "clicli.cli";
-            dlg.Filter = "Cli Files(*.cli)|*.cli|All Files(*.*)|*.*";
+            dlg.Filter = "Cli Proj Files(*.clp)|*.clp;*.cli|All Files(*.*)|*.*";
+            dlg.DefaultExt = "clp";
             dlg.RestoreDirectory = true;
             if (dlg.ShowDialog() == true)
             {
@@ -1216,7 +1218,8 @@ namespace CliCliBoy
             }
             var dlg = new Microsoft.Win32.OpenFileDialog();
             dlg.FileName = Globals.Instance.DataFilePath ?? "";
-            dlg.Filter = "CliCli Files(*.clicli)|*.clicli|All Files(*.*)|*.*";
+            dlg.Filter = "CliCli Files(*.clc)|*.clc;*.clicli|All Files(*.*)|*.*";
+            dlg.DefaultExt = "clc";
             dlg.RestoreDirectory = true;
             if (dlg.ShowDialog() == true)
             {
@@ -1251,7 +1254,8 @@ namespace CliCliBoy
             {
                 var dlg = new Microsoft.Win32.SaveFileDialog();
                 dlg.FileName = Globals.Instance.DataFilePath;
-                dlg.Filter = "CliCli Files(*.clicli)|*.clicli|All Files(*.*)|*.*";
+                dlg.Filter = "CliCli Files(*.clc)|*.clc;*.clicli|All Files(*.*)|*.*";
+                dlg.DefaultExt = "clc";
                 dlg.RestoreDirectory = true;
                 if (dlg.ShowDialog() == true)
                 {

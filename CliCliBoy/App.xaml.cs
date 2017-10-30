@@ -39,6 +39,14 @@ namespace CliCliBoy
         public Settings Settings { get; set; }
 
 
+        public static readonly String EXT_C = "clc";
+        public static readonly String EXT_C_PREV = "clicli";
+        public static readonly String EXT_P = "clp";
+        public static readonly String EXT_P_PREV = "cli";
+
+        public static readonly String DEF_FILENAME = "default.clc";
+        public static readonly String DEF_SETTINGFILE = "clicli.setting";
+
         //private class NoopLogger : Logger
         //{
         //    public void Output(string msg)
@@ -58,8 +66,8 @@ namespace CliCliBoy
          */
         private Globals()
         {
-            DataFilePath = "default.clicli";    // 初期値
-            SettingFilePath = "clicli.setting";
+            DataFilePath = DEF_FILENAME;    // 初期値
+            SettingFilePath = DEF_SETTINGFILE;
         }
     }
 

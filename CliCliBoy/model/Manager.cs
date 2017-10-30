@@ -697,6 +697,7 @@ namespace CliCliBoy.model
             System.IO.StreamReader sr = null;
             Object obj = null;
             bool error = false;
+            bool converted = false;
 
             try
             {
@@ -715,7 +716,11 @@ namespace CliCliBoy.model
                     mang.IsModified = false;
                     mang.Projects.CheckAndRepairNextId();
 
-                    mang.OnVersionUp(mang.Version);
+                    if (mang.Version < CURRENT_VERSION)
+                    {
+                        mang.OnVersionUp(mang.Version);
+                        converted = true;
+                    }
                 }
             }
             catch (Exception e)
@@ -734,7 +739,14 @@ namespace CliCliBoy.model
                 // 旧バージョンからのコンバート用のため、ここでプロジェクトIDの初期化を実行しておく。（将来は不要になる予定）
                 //((Manager)obj).Projects.InitProjectId();
 
-                if (error)
+                if(converted)
+                {
+                    if (File.Exists(Globals.Instance.DataFilePath))
+                    {
+                        File.Copy(Globals.Instance.DataFilePath, makeUniqueFilePath(Globals.Instance.DataFilePath, "old"));
+                    }
+                }
+                else if (error)
                 {
                     // エラーを起こしたソースファイルをバックアップしておく
                     if (File.Exists(Globals.Instance.DataFilePath))
