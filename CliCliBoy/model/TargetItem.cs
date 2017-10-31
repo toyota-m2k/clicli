@@ -48,6 +48,8 @@ namespace CliCliBoy.model
         private ClickCondition mCondition;
         private ConditionList mConditionList;
         private KeyType mPressKey;
+        private int mWheelAmount;
+        private bool mMoveMouse;
 
         //private Point mPoint;
         //private Point mBasePoint;
@@ -97,7 +99,6 @@ namespace CliCliBoy.model
             }
         }
 
-        private int mWheelAmount;
         public int WheelAmount
         {
             get { return mWheelAmount; }
@@ -112,6 +113,19 @@ namespace CliCliBoy.model
             }
         }
 
+        public bool MoveMouse
+        {
+            get { return mMoveMouse; }
+            set
+            {
+                if (mMoveMouse != value)
+                {
+                    mMoveMouse = value;
+                    notify("MoveMouse");
+                    IsModified = true;
+                }
+            }
+        }
 
         public string Comment
         {
@@ -323,6 +337,7 @@ namespace CliCliBoy.model
             mConditionList = new ConditionList();
             mScreenPoint = new ScreenPoint();
             mPressKey = KeyType.ESC;
+            mMoveMouse = false;
             IsModified = false;
             //mPoint = new Point();
             //mBasePoint = new Point();
@@ -357,6 +372,7 @@ namespace CliCliBoy.model
             mConditionList = new ConditionList(s.ConditionList);
             mScreenPoint = new ScreenPoint(s.ScreenPoint);
             mPressKey = s.mPressKey;
+            mMoveMouse = s.mMoveMouse;
             IsModified = false;
             //mPoint = s.mPoint;
             //mBasePoint = s.mBasePoint;
@@ -390,6 +406,7 @@ namespace CliCliBoy.model
             ConditionList = s.ConditionList;
             ScreenPoint = s.ScreenPoint;
             PressKey = s.PressKey;
+            MoveMouse = s.MoveMouse;
 
             IsModified = true;
             //Point = s.Point;

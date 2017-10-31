@@ -95,6 +95,17 @@ namespace CliCliBoy.interop
             return input;
         }
 
+        public static bool MoveMouse(Point pos, IsReady isReady)
+        {
+            if (null != isReady && !isReady())
+            {
+                return false;
+            }
+            System.Windows.Forms.Cursor.Position = pos;
+            return true;
+        }
+
+
         public static bool ClickAt(Point pos, IsReady isReady, bool dblclk)
         {
             Point curPos = System.Windows.Forms.Cursor.Position;

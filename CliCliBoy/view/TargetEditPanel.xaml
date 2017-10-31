@@ -95,9 +95,12 @@
             </StackPanel>
 
             <!--Point-->
-            <TextBlock Grid.Row="2" Grid.Column="0" Text="Point" Visibility ="{Binding Type, Converter={StaticResource TypePointVisibilityConverter}}" Style="{StaticResource left}"/>
-            <Button Grid.Row="2" Grid.Column="1" Style="{StaticResource StrongButton}" Width="auto" Click="Button_SetPoint" Visibility="{Binding Type, Converter={StaticResource TypePointVisibilityConverter}}">
-                <TextBlock Visibility="{Binding Type, Converter={StaticResource TypePointVisibilityConverter}}">
+            <TextBlock Grid.Row="2" Grid.Column="0" Text="Point" Style="{StaticResource left}"
+                       Visibility ="{Binding Type, Converter={StaticResource TypePointVisibilityConverter}}" />
+            <Button Grid.Row="2" Grid.Column="1" Style="{StaticResource StrongButton}" Width="auto" 
+                    Click="Button_SetPoint" 
+                    Visibility="{Binding Type, Converter={StaticResource TypePointVisibilityConverter}}">
+                <TextBlock>
                     <TextBlock.Text>
                         <MultiBinding StringFormat="{}{0},{1}">
                             <Binding Path="ScreenPoint.Point.X" />
@@ -106,6 +109,9 @@
                     </TextBlock.Text>
                 </TextBlock>
             </Button>
+            <CheckBox Grid.Row="2" Grid.Column="2" Content="Move" VerticalAlignment="Center" 
+                      IsChecked="{Binding MoveMouse}"
+                      Visibility="{Binding Type, Converter={StaticResource TypePointVisibilityConverter}}"/>
 
             <!-- Wait -->
             <TextBlock Grid.Row="3" Grid.Column="0" Text="Wait" Style="{StaticResource left}"/>

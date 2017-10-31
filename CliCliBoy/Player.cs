@@ -172,7 +172,12 @@ namespace CliCliBoy.model
                     {
                         return ActionResult.DONE;
                     }
-                    else if (item.Type == ClickType.CLICK || item.Type == ClickType.DBLCLK)
+
+                    if(item.MoveMouse)
+                    {
+                        interop.MouseEmulator.MoveMouse(item.Clicker.ClickPoint, isReady);
+                    }
+                    if (item.Type == ClickType.CLICK || item.Type == ClickType.DBLCLK)
                     {
                         if (interop.MouseEmulator.ClickAt(item.Clicker.ClickPoint, isReady, item.Type == ClickType.DBLCLK))
                         {
