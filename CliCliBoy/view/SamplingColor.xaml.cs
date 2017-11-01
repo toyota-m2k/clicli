@@ -403,7 +403,7 @@ namespace CliCliBoy.view
 
         private void Btn_SampleNow(object sender, RoutedEventArgs e)
         {
-            Debug.WriteLine("Button-Click");
+            //Debug.WriteLine("Button-Click");
             if (!mSamplingContext.HoldOnSampling)
             {
                 endSampling();
@@ -450,7 +450,7 @@ namespace CliCliBoy.view
 
         private void Btn_SamplingDown(object sender, MouseButtonEventArgs e)
         {
-            Debug.WriteLine("Button-Down");
+            //Debug.WriteLine("Button-Down");
             if (mSamplingContext.HoldOnSampling)
             {
                 startSampling();
@@ -459,7 +459,7 @@ namespace CliCliBoy.view
 
         private void Btn_SamplingUp(object sender, MouseButtonEventArgs e)
         {
-            Debug.WriteLine("Button-Up");
+            //Debug.WriteLine("Button-Up");
             endSampling();
         }
 

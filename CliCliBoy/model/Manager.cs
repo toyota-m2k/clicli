@@ -469,7 +469,7 @@ namespace CliCliBoy.model
             {
                 if (Serialize())
                 {
-                    Debug.WriteLine("Saved.");
+                    //Debug.WriteLine("Saved.");
                     IsModified = false;
                 }
 
