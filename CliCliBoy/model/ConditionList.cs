@@ -210,14 +210,13 @@ namespace CliCliBoy.model
                 }
                 catch (Win32Exception ex)
                 {
-                    dbgout.Put(ex.ToString());
+                    Debug.WriteLine(ex.ToString());
                     return false;
                 }
                 catch (Exception e2)
                 {
-                    //Debug.WriteLine(e2.ToString());
-                    dbgout.Put(e2.ToString());
-                    dbgout.Put(absPoint.ToString());
+                    Debug.WriteLine(e2.ToString());
+                    Debug.WriteLine(absPoint.ToString());
                     return false;
                 }
             }

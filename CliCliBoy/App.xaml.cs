@@ -4,7 +4,9 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -39,10 +41,10 @@ namespace CliCliBoy
         public Settings Settings { get; set; }
 
 
-        public static readonly String EXT_C = "clc";
-        public static readonly String EXT_C_PREV = "clicli";
-        public static readonly String EXT_P = "clp";
-        public static readonly String EXT_P_PREV = "cli";
+        public static readonly String EXT_C = ".clc";
+        public static readonly String EXT_C_PREV = ".clicli";
+        public static readonly String EXT_P = ".clp";
+        public static readonly String EXT_P_PREV = ".cli";
 
         public static readonly String DEF_FILENAME = "default.clc";
         public static readonly String DEF_SETTINGFILE = "clicli.setting";
@@ -93,6 +95,44 @@ namespace CliCliBoy
             //}
             Globals.Instance.Settings = Settings.Deserialize();
             Globals.Instance.DataContext = Manager.Deserialize();
+
+            AppDomain currentDomain = AppDomain.CurrentDomain;
+            currentDomain.UnhandledException += new UnhandledExceptionEventHandler(GlobalErrorHandler);
+        }
+
+        static void GlobalErrorHandler(object sender, UnhandledExceptionEventArgs args)
+        {
+            StreamWriter sw = null;
+            try
+            {
+                // エラーファイルのパス
+                bool append = true;
+                var dir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+                var efile = Path.Combine(dir, "cli-err.txt");
+                var info = new FileInfo(efile);
+                if(info.Exists && info.Length>1*1024*1024)  // 1MBでリサイクル
+                {
+                    var bfile = Path.Combine(dir, "cli-err-old.txt");
+                    File.Copy(efile, bfile, true);
+                    append = false;
+                }
+
+
+                //書き込むファイルを開く（UTF-8 BOM無し）
+                Exception e = (Exception)args.ExceptionObject;
+                using (sw = new StreamWriter(efile, append, new System.Text.UTF8Encoding(false)))
+                {
+                    sw.WriteLine("");
+                    sw.WriteLine("Date: {0}", DateTime.Now.ToString());
+                    sw.WriteLine(e.ToString());
+                    sw.WriteLine("-----------------------------------------------");
+                    sw.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.ToString());
+            }
         }
     }
 }

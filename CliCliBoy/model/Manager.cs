@@ -697,7 +697,7 @@ namespace CliCliBoy.model
             System.IO.StreamReader sr = null;
             Object obj = null;
             bool error = false;
-            bool converted = false;
+
 
             try
             {
@@ -719,7 +719,17 @@ namespace CliCliBoy.model
                     if (mang.Version < CURRENT_VERSION)
                     {
                         mang.OnVersionUp(mang.Version);
-                        converted = true;
+
+                        if (Path.GetExtension(Globals.Instance.DataFilePath).Equals(Globals.EXT_C_PREV))
+                        {
+                            Globals.Instance.DataFilePath = Path.GetFileNameWithoutExtension(Globals.Instance.DataFilePath) + Globals.EXT_C;
+                            if(File.Exists(Globals.Instance.DataFilePath))
+                            {
+                                File.Copy(Globals.Instance.DataFilePath, makeUniqueFilePath(Globals.Instance.DataFilePath, "old"));
+                            }
+                            mang.IsModified = true;
+                            mang.Serialize();
+                        }
                     }
                 }
             }
@@ -739,14 +749,7 @@ namespace CliCliBoy.model
                 // 旧バージョンからのコンバート用のため、ここでプロジェクトIDの初期化を実行しておく。（将来は不要になる予定）
                 //((Manager)obj).Projects.InitProjectId();
 
-                if(converted)
-                {
-                    if (File.Exists(Globals.Instance.DataFilePath))
-                    {
-                        File.Copy(Globals.Instance.DataFilePath, makeUniqueFilePath(Globals.Instance.DataFilePath, "old"));
-                    }
-                }
-                else if (error)
+                if (error)
                 {
                     // エラーを起こしたソースファイルをバックアップしておく
                     if (File.Exists(Globals.Instance.DataFilePath))
