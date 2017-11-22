@@ -267,6 +267,7 @@ namespace CliCliBoy.model
                 {
                     IsModified = true;
                     notify("URL");
+                    notify("HasURL");
                 }
             }
         }
