@@ -190,8 +190,8 @@
                                                     <Run>
                                                         <Run.Text>
                                                             <MultiBinding StringFormat="{}{0},{1}">
-                                                                <Binding Path="ScreenPoint.Point.X" Mode="OneWay"/>
-                                                                <Binding Path="ScreenPoint.Point.Y" Mode="OneWay"/>
+                                                                <Binding Path="ScreenPoint.AbsolutePoint.X" Mode="OneWay"/>
+                                                                <Binding Path="ScreenPoint.AbsolutePoint.Y" Mode="OneWay"/>
                                                             </MultiBinding>
                                                         </Run.Text>
                                                     </Run>

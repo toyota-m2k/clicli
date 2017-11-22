@@ -1415,5 +1415,14 @@ namespace CliCliBoy
                 MouseCursorWindow.Show(target.Clicker.ClickPoint);
             }
         }
+
+        private void BtnLink_Click(object sender, RoutedEventArgs e)
+        {
+            var target = ((FrameworkElement)sender).DataContext as Project;
+            if(null!=target && target.HasURL)
+            {
+                System.Diagnostics.Process.Start(target.URL);
+            }
+        }
     }
 }

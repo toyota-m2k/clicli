@@ -22,6 +22,7 @@ namespace CliCliBoy.model
         private static int sRepeatCountDef = 1;
         private static readonly string[] repeatpropnames = {"Repeat", "IsInfinite"};
         private uint mRatio;
+        private string mUrl;
 
         /**
          * コンストラクタ
@@ -35,6 +36,7 @@ namespace CliCliBoy.model
             ID = 0;
             IsModified = false;
             mTargets.CollectionChanged += OnCollectionChanged;
+            mUrl = null;
         }
 
         private void OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
@@ -232,6 +234,43 @@ namespace CliCliBoy.model
                 }
             }
         }
+
+        [System.Xml.Serialization.XmlIgnore]
+        public bool HasURL
+        {
+            get { return mUrl != null && mUrl.StartsWith("http"); }
+        }
+
+        public string URL
+        {
+            get { return (null == mUrl) ? "" : mUrl; }
+            set
+            {
+                bool modified = false;
+                if (null == value || value.Length == 0)
+                {
+                    if (mUrl != null)
+                    {
+                        modified = true;
+                        mUrl = null;
+                    }
+                }
+                else
+                {
+                    if (mUrl != value)
+                    {
+                        modified = true;
+                        mUrl = value;
+                    }
+                }
+                if (modified)
+                {
+                    IsModified = true;
+                    notify("URL");
+                }
+            }
+        }
+
 
 
         #endregion

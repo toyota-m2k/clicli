@@ -312,6 +312,9 @@
     <Resource Include="resources\more.png" />
     <Resource Include="resources\not.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="resources\link.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>if NOT "$(ConfigurationName)" == "Release" goto END

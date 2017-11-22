@@ -22,6 +22,7 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
@@ -66,8 +67,11 @@
             <local:NumericTextBox Grid.Row="6" Grid.Column="1" Style="{StaticResource right}" Text="{Binding Repeat}" VerticalAlignment="Center" Visibility="{Binding IsInfinite, Converter={StaticResource VisibilityHiddenTrueConverter}}"/>
             <TextBlock Grid.Row="6" Grid.Column="2" Text="times" Style="{StaticResource left}"  Visibility="{Binding IsInfinite, Converter={StaticResource VisibilityHiddenTrueConverter}}"/>
 
+            <!-- URL -->
+            <TextBlock Grid.Row="7" Grid.Column="0" Text="URL"  Style="{StaticResource left}" />
+            <TextBox Grid.Row="7" Grid.Column="1" x:Name="TxUrl" Style="{StaticResource right}" Text="{Binding URL}" />
 
-            <StackPanel Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="3" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,15,0,5">
+            <StackPanel Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="3" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,15,0,5">
                 <Button Content="OK" Width="80" IsDefault="True" Margin="0,0,10,0" VerticalAlignment="Bottom" Click="Button_Ok" Style="{StaticResource OkButton}"/>
                 <Button Content="Cancel" Width="80" IsCancel="True" VerticalAlignment="Top" Click="Button_Cancel" Style="{StaticResource CancelButton}"/>
             </StackPanel>

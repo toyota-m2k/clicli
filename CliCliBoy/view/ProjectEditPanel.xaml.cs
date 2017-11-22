@@ -43,23 +43,26 @@ namespace CliCliBoy.view
 
         public void InitByProject(Project proj)
         {
-            mSettingProject = new Project();
-            mSettingProject.Name = proj.Name;
+            mSettingProject        = new Project();
+            mSettingProject.Name   = proj.Name;
             mSettingProject.Mode.CopyFrom(proj.Mode);
             mSettingProject.Repeat = proj.Repeat;
-            this.DataContext = mSettingProject;
+            mSettingProject.URL    = proj.URL;
+            this.DataContext       = mSettingProject;
         }
 
         public void GetSettingResult(Project proj)
         {
-            proj.Name = mSettingProject.Name;
-            proj.Mode = mSettingProject.Mode;
+            proj.Name   = mSettingProject.Name;
+            proj.Mode.CopyFrom(mSettingProject.Mode);
             proj.Repeat = mSettingProject.Repeat;
+            proj.URL    = mSettingProject.URL;
         }
 
         private void Button_Ok(object sender, RoutedEventArgs e)
         {
             mSettingProject.Name = TxName.Text;     // TextBox内からEnterキー(DefaultKey)で抜けるとき、バインドによる更新が行われない。（TextBoxはkillfocusで更新されるらしい）
+            mSettingProject.URL = TxUrl.Text;
             mDialogHelper.Close(true);
         }
 

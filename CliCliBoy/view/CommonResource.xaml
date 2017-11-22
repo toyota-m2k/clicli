@@ -56,6 +56,7 @@
     <BitmapImage x:Key="NotIcon" UriSource="../resources/not.png"/>
     <BitmapImage x:Key="MoreIcon" UriSource="../resources/more.png"/>
     <BitmapImage x:Key="BlankIcon" UriSource="../resources/blank.png"/>
+    <BitmapImage x:Key="LinkIcon" UriSource="../resources/link.png"/>
 
 
     <BitmapImage x:Key="FoldUpIcon" UriSource="../resources/fold.png"/>
@@ -203,6 +204,16 @@
                 <Setter Property="Foreground" Value="#FFDFB9FF"/>
             </DataTrigger>
         </Style.Triggers>
+    </Style>
+
+    <Style TargetType="{x:Type Button}" x:Key="ImageButtonStyle">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <ContentPresenter/>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
     </Style>
 
     <ObjectDataProvider x:Key="KeyTypes" MethodName="GetValues" 

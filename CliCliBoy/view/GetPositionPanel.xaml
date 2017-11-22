@@ -20,41 +20,53 @@
                 <TextBlock Text="{Binding RemainSec, StringFormat='get position after {0} seconds.'}"/>
             </CheckBox>
 
-            <Grid HorizontalAlignment="Center" Visibility="{Binding EnableRatio, Converter={StaticResource BoolToVisibility}}" Margin="0,20,0,0">
+            <Grid HorizontalAlignment="Center" Visibility="{Binding EnableRatio, Converter={StaticResource BoolToVisibility}}" Margin="0,20,0,0" Background="#FFCFDFEA">
                 <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
-                <Grid Grid.Row="0" HorizontalAlignment="Center" Visibility="{Binding SettingTargetWinPos, Converter={StaticResource NegBoolToVisibility}}">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
+                <Grid Grid.Row="0">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="50*"/>
+                        <ColumnDefinition Width="50*"/>
                     </Grid.ColumnDefinitions>
+                    <Grid.Resources>
+                        <Style TargetType="RadioButton" BasedOn="{StaticResource RadioToggle}">
+                            <Setter Property="Padding" Value="4"/>
+                        </Style>
+                    </Grid.Resources>
+                    <RadioButton Grid.Column="0" Content="Get Position" IsChecked="True" GroupName="OperationMode" Margin="0"/>
+                    <RadioButton Grid.Column="1" Content="Move Target" IsChecked="{Binding SettingTargetWinPos, Mode=TwoWay}" GroupName="OperationMode" Margin="0"/>
+                </Grid>
+                
+                <StackPanel Grid.Row="1" Orientation="Vertical" HorizontalAlignment="Center" Width="350" Visibility="{Binding SettingTargetWinPos, Converter={StaticResource NegBoolToVisibility}}" Margin="0,5">
 
-                    <StackPanel Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,5,0,15">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,5,0,15">
                         <TextBlock VerticalAlignment="Center">
-                            <TextBlock.Text>
-                                <MultiBinding StringFormat="Based at ({0},{1})">
-                                    <Binding Path="OrgPoint.X" />
-                                    <Binding Path="OrgPoint.Y" />
-                                </MultiBinding>
-                            </TextBlock.Text>
+                            <Run>
+                                Based at
+                            </Run>
+                            <Hyperlink Style="{StaticResource NoUnderlineHyperlink}" Click="Btn_ShowPos">
+                                <Run>
+                                    <Run.Text>
+                                        <MultiBinding StringFormat="({0},{1})">
+                                            <Binding Path="OrgPoint.X" Mode="OneWay"/>
+                                            <Binding Path="OrgPoint.Y" Mode="OneWay"/>
+                                        </MultiBinding>
+                                    </Run.Text>
+                                </Run>
+                            </Hyperlink>
                         </TextBlock>
-                        <Button Style="{StaticResource NorButton}" Content="Show Pos." Margin="5,0,0,0" Padding="8,2" Click="Btn_ShowPos"/>
                         <Button Style="{StaticResource NorButton}" Content="Adjust" Margin="5,0,0,0" Padding="8,2" Click="Btn_Adjust"/>
                     </StackPanel>
 
-                    <TextBlock Grid.Row="1" Grid.Column="0" Text="Exp.Ratio" Margin="0,0,10,0"/>
-                    <local:NumericTextBox x:Name="RatioEdit" Grid.Row="1" Grid.Column="1" Text="{Binding Ratio}" />
-                    <TextBlock Grid.Row="1" Grid.Column="2" Text="%" HorizontalAlignment="Center"/>
-
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                        <TextBlock Text="Exp.Ratio" Margin="0,0,10,0"/>
+                        <local:NumericTextBox x:Name="RatioEdit"  Width="100" Text="{Binding Ratio}" />
+                        <TextBlock Text="%" HorizontalAlignment="Center"/>
+                    </StackPanel>
                     <StackPanel Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Center">
                         <Button Content="100" Width="35" Style="{StaticResource NorButton}" Margin="0,5,2,0" Click="PresetRatio_Click" Padding="0,2" />
                         <Button Content="90" Width="35" Style="{StaticResource NorButton}" Margin="0,5,2,0" Click="PresetRatio_Click" Padding="0,2" />
@@ -63,23 +75,21 @@
                         <Button Content="50" Width="35" Style="{StaticResource NorButton}" Margin="0,5,2,0" Click="PresetRatio_Click" Padding="0,2" />
                     </StackPanel>
 
-                </Grid>
+                </StackPanel>
 
-                <StackPanel Grid.Row="1" Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Center" Visibility="{Binding TargetWinPosEnabled, Converter={StaticResource BoolToVisibility}}" Margin="0,10,0,0">
-                    <CheckBox IsChecked="{Binding SettingTargetWinPos, Mode=TwoWay}" VerticalAlignment="Center">
-                        <TextBlock>
-                            <TextBlock.Text>
-                                <MultiBinding StringFormat="Move target to ({0},{1}) {2}W x {3}H">
-                                    <Binding Path="TargetWinPos.X" Mode="OneWay"/>
-                                    <Binding Path="TargetWinPos.Y" Mode="OneWay"/>
-                                    <Binding Path="TargetWinPos.Width" Mode="OneWay"/>
-                                    <Binding Path="TargetWinPos.Height" Mode="OneWay"/>
-                                </MultiBinding>
-                            </TextBlock.Text>
-                        </TextBlock>
-                    </CheckBox>
+                <StackPanel Grid.Row="2" Width="350" Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{Binding SettingTargetWinPos, Converter={StaticResource BoolToVisibility}}" Margin="0,5">
+                    <TextBlock HorizontalAlignment="Center">
+                        <TextBlock.Text>
+                            <MultiBinding StringFormat="Move target to ({0},{1}) - {2}W x {3}H">
+                                <Binding Path="TargetWinPos.X" Mode="OneWay"/>
+                                <Binding Path="TargetWinPos.Y" Mode="OneWay"/>
+                                <Binding Path="TargetWinPos.Width" Mode="OneWay"/>
+                                <Binding Path="TargetWinPos.Height" Mode="OneWay"/>
+                            </MultiBinding>
+                        </TextBlock.Text>
+                    </TextBlock>
 
-                    <Grid Visibility="{Binding SettingTargetWinPos, Converter={StaticResource BoolToVisibility}}" Margin="0,10,0,0">
+                    <Grid Visibility="{Binding SettingTargetWinPos, Converter={StaticResource BoolToVisibility}}" Margin="0,10,0,0" HorizontalAlignment="Center">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
@@ -101,7 +111,7 @@
                         <local:NumericTextBox Grid.Row="0" Grid.Column="3" Text="{Binding TargetWinPos.Width, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="60" Margin="0,2"/>
                         <local:NumericTextBox Grid.Row="1" Grid.Column="3" Text="{Binding TargetWinPos.Height, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="60" Margin="0,2"/>
 
-                        <Button Grid.Row="2" Grid.ColumnSpan="4" Content="Left/Top corner"  Padding="8,2" Style="{StaticResource NorButton}" Margin="5,10,0,0" HorizontalAlignment="Left" Click="Btn_ClearTargetWinPos"/>
+                        <Button Grid.Row="2" Grid.ColumnSpan="4" Content="Left/Top corner"  Padding="8,2" Style="{StaticResource NorButton}" Margin="0,10,0,0" HorizontalAlignment="Center" Click="Btn_ClearTargetWinPos"/>
                     </Grid>
 
                 </StackPanel>
