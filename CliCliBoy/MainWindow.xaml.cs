@@ -1422,6 +1422,7 @@ namespace CliCliBoy
             if(null!=target && target.HasURL)
             {
                 System.Diagnostics.Process.Start(target.URL);
+                ProjectListView.SelectedItem = target;
             }
         }
     }
