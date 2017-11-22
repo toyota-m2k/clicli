@@ -327,7 +327,7 @@ goto DBOX
 echo No tools folder.
 
 :DBOX
-if %25DROPBOX%25 == "" goto NODBOX
+if NOT DEFINED DROPBOX goto NODBOX
 copy $(TargetPath)　%25DROPBOX%25\bin
 goto END
 
