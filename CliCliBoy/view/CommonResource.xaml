@@ -27,8 +27,9 @@
     <SolidColorBrush x:Key="StatusBarBg" Color="#FFFFDEFF" />
     <SolidColorBrush x:Key="DlgTitleBg" Color="#FFCEBCFF" />
     <SolidColorBrush x:Key="TBtnBg" Color="#FFFFFF" />
-    <SolidColorBrush x:Key="TBProjectBg" Color="#FF30002A" />
-    <SolidColorBrush x:Key="TBTargetBg" Color="#FF0D6174" />
+    <SolidColorBrush x:Key="TBProjectBg" Color="#FF3A0553" />
+    <SolidColorBrush x:Key="TBTargetBg" Color="#FF152455" />
+    <SolidColorBrush x:Key="TBTargetBgActive" Color="#FF6688FB" />
     <SolidColorBrush x:Key="TBOperatingBg" Color="#FF6D7803" />
 
     <BitmapImage x:Key="StartIcon" UriSource="../resources/start.png"/>
