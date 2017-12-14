@@ -350,9 +350,20 @@ namespace CliCliBoy.model
                     IsModified = true;
                     mCombination = value;
                     notify("Combination");
+                    notify("CombinationName");
                 }
             }
         }
+
+        [System.Xml.Serialization.XmlIgnore]
+        public string CombinationName
+        {
+            get
+            {
+                return mCombination.ToString();
+            }
+        }
+
 
         public ActionType Type
         {

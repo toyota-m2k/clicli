@@ -684,7 +684,7 @@
                                                             >
                                                         <Grid>
                                                             <Viewbox VerticalAlignment="Top" Margin="4">
-                                                                <TextBlock Foreground="#3f51b5">AND</TextBlock>
+                                                                <TextBlock Foreground="#3f51b5" Text="{Binding ConditionList.CombinationName}"/>
                                                             </Viewbox>
                                                             <Image Source="{StaticResource MoreIcon}" Margin="0,14,0,0" Width="10" Height="10"/>
                                                         </Grid>
