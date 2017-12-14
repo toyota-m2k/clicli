@@ -596,9 +596,6 @@ namespace CliCliBoy
                 mContext.ResumeHotKey();
                 if (ok)
                 {
-                    // Ratio
-                    ratioCallback?.Invoke(GettingPointPanel.Ratio);
-
                     // TargetWinPos
                     if (null != twp && GettingPointPanel.TargetWinPos.hasValue)
                     {

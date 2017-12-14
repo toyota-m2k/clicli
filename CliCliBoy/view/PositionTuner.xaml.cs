@@ -6,6 +6,8 @@ using System.Drawing.Imaging;
 using System.Windows.Media.Imaging;
 using CliCliBoy.model;
 using System;
+using CliCliBoy.interop;
+using System.Windows.Media;
 
 namespace CliCliBoy.view
 {
@@ -23,7 +25,7 @@ namespace CliCliBoy.view
 
         //public static int UnitHeight { get { return MapHeight / CaptureHeight; } }
         //public static int UnitWidth { get { return MapWidth / CaptureWidth; } }
-
+        private HotKey mHotKey;
         private bool mDragging = false;
 
         public enum Magnification
@@ -227,6 +229,8 @@ namespace CliCliBoy.view
         public PositionTuner()
         {
             InitializeComponent();
+            RenderOptions.SetBitmapScalingMode(CapturedImage, BitmapScalingMode.NearestNeighbor);
+            RenderOptions.SetEdgeMode(CapturedImage, EdgeMode.Aliased);
         }
 
         public void Init(System.Drawing.Point point)
@@ -234,6 +238,7 @@ namespace CliCliBoy.view
             mContext = new PositionTunerContext(this, point);
             DataContext = mContext;
             capture();
+            openHotKey();
         }
 
         private void capture()
@@ -300,17 +305,56 @@ namespace CliCliBoy.view
 
         private void Button_Ok(object sender, RoutedEventArgs e)
         {
-            OnCompleted?.Invoke(true, this);
+            Complete(true);
         }
 
         private void Button_Cancel(object sender, RoutedEventArgs e)
         {
-            OnCompleted?.Invoke(false, this);
+            Complete(false);
         }
 
         private void Button_Capture(object sender, RoutedEventArgs e)
         {
             CaptureNow();
         }
+
+        private void Complete(bool flag)
+        {
+            closeHotKey();
+            OnCompleted?.Invoke(flag, this);
+        }
+
+        private void openHotKey()
+        {
+            if (null == mHotKey)
+            {
+                HotKey.Proc succeeded = () =>
+                {
+                    var pos = System.Windows.Forms.Cursor.Position;
+                    mContext.CapturePoint = new System.Drawing.Point(pos.X, pos.Y);
+                    mContext.TargetPoint = mContext.CapturePoint;
+                    capture();
+                };
+                HotKey.Proc cancelled = () =>
+                {
+                };
+
+                mHotKey = new HotKey();
+                bool result;
+                result = mHotKey.Register(0, (int)System.Windows.Forms.Keys.A, succeeded);
+                result |= mHotKey.Register(0, (int)System.Windows.Forms.Keys.Add, succeeded);
+                result |= mHotKey.Register(0, (int)System.Windows.Forms.Keys.Escape, cancelled);
+            }
+
+        }
+        private void closeHotKey()
+        {
+            if (null != mHotKey)
+            {
+                mHotKey.Dispose();
+                mHotKey = null;
+            }
+        }
+
     }
 }

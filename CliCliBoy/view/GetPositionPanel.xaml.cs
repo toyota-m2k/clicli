@@ -57,6 +57,13 @@ namespace CliCliBoy.view
                 RemainSec = GPTimerSec;
             }
 
+            /**
+             * Ratioの設定欄を表示するかどうか。
+             * 本来、↑の用途だが、これを表示するかどうかは、
+             * BasePointを設定するダイアログか、それ以外（ターゲット位置や条件チェック位置の取得用ダイアログ）かの違いなので、
+             * BasePoint設定用ダイアログかどうかのチェックに使ってしまっていてわかりにくい。
+             * そこで、この用途には、isGettingBasePosDialog プロパティを用意した。
+             */
             private bool mEnableRatio = false;
             public bool EnableRatio
             {
@@ -66,6 +73,11 @@ namespace CliCliBoy.view
                     mEnableRatio = value;
                     notify("EnableRatio");
                 }
+            }
+
+            public bool isGettingBasePosDialog
+            {
+                get { return mEnableRatio; }
             }
 
             private uint mRatio = 100;
@@ -95,8 +107,6 @@ namespace CliCliBoy.view
                     return mOrgPoint;
                 }
             }
-
-            public bool PositionAvailable { get; set; } = false;
 
             private TargetWinPos _targetWinPos = null;
             public TargetWinPos TargetWinPos
@@ -175,6 +185,11 @@ namespace CliCliBoy.view
                 mTimer = null;
             }
 
+            if(result &&  null != mOnGotRatio)
+            {
+                mOnGotRatio(Ratio);
+            }
+
             if (null != mOnClose)
             {
                 mOnClose(result);
@@ -202,7 +217,6 @@ namespace CliCliBoy.view
                     }
                 }
                 mGPData.OrgPoint = pos;
-                mGPData.PositionAvailable = true;
             }
         }
 
@@ -213,7 +227,7 @@ namespace CliCliBoy.view
                 HotKey.Proc succeeded = () =>
                 {
                     Result = System.Windows.Forms.Cursor.Position;
-                    if (mGPData.EnableRatio)
+                    if (mGPData.isGettingBasePosDialog)
                     {
                         endTimer();
                         setResultOrgPoint(Result);
@@ -253,7 +267,6 @@ namespace CliCliBoy.view
             mGPData.Reset();
             mGPData.EnableRatio = (null != gotratio);
             mGPData.Ratio = initRatio;
-            mGPData.PositionAvailable = false;
             GPTChk.IsChecked = false;
 
             if (null != twp)
@@ -271,16 +284,7 @@ namespace CliCliBoy.view
 
         private void OkButton_Click(object sender, RoutedEventArgs e)
         {
-            if (null != mOnGotRatio)
-            {
-                mOnGotRatio(Ratio);
-            }
-            bool flag = false;
-            if (mGPData.EnableRatio && mGPData.PositionAvailable)
-            {
-                flag = true;
-            }
-            Close(flag);
+            Close(true);
         }
 
         public void startTimer()
@@ -318,7 +322,7 @@ namespace CliCliBoy.view
                 {
                     // 100 ms x 30times = 3 sec =====  3 * 1000 msec / 100msec = 30 times
                     Result = curPoint;
-                    if (mGPData.EnableRatio)
+                    if (mGPData.isGettingBasePosDialog)
                     {
                         endTimer();
                         setResultOrgPoint(Result);
@@ -394,7 +398,7 @@ namespace CliCliBoy.view
             GetPositionMain.Visibility = Visibility.Visible;
             GetPositionSub.Visibility = Visibility.Hidden;
 
-            if (!mGPData.EnableRatio)
+            if (!mGPData.isGettingBasePosDialog)
             {
                 Close(flag);
             }
