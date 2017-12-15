@@ -1188,11 +1188,14 @@ namespace CliCliBoy
             DbgOut.Clear();
         }
 
-        private void HandleFileNew(object sender, ExecutedRoutedEventArgs e)
+        /**
+         * cliファイルを新規作成
+         */
+        private void fileCreate()
         {
-            if(mContext.IsModified)
+            if (mContext.IsModified)
             {
-                HandleFileSave(sender, e);
+                fileSave();
             }
             Globals.Instance.DataFilePath = null;
             var manager = new Manager();
@@ -1207,45 +1210,10 @@ namespace CliCliBoy
             updateTitle();
         }
 
-        private void HandleFileOpen(object sender, ExecutedRoutedEventArgs e)
-        {
-            if (mContext.IsModified)
-            {
-                HandleFileSave(sender, e);
-            }
-            var dlg = new Microsoft.Win32.OpenFileDialog();
-            dlg.FileName = Globals.Instance.DataFilePath ?? "";
-            dlg.Filter = "CliCli Files(*.clc)|*.clc;*.clicli|All Files(*.*)|*.*";
-            dlg.DefaultExt = "clc";
-            dlg.RestoreDirectory = true;
-            if (dlg.ShowDialog() == true)
-            {
-                Globals.Instance.DataFilePath = dlg.FileName;
-                var manager = Manager.Deserialize();
-
-                mContext.UnbindView();
-
-                Globals.Instance.DataContext = manager;
-                mContext = manager;
-                mContext.BindView(this);
-                this.DataContext = mContext;
-
-                mContext.SelectProjectsFromIdList();
-                updateTitle();
-            }
-        }
-
-        private void HandleFileSave(object sender, ExecutedRoutedEventArgs e)
-        {
-            if(Globals.Instance.DataFilePath == null)
-            {
-                HandleFileSaveAs(sender, e);
-                return;
-            }
-            Globals.Instance.DataContext.Serialize();
-        }
-
-        private void HandleFileSaveAs(object sender, ExecutedRoutedEventArgs e)
+        /**
+         * cliファイルに名前を付けて保存
+         */
+        private void fileSaveAs()
         {
             if (ProjectListView.SelectedItems.Count > 0)
             {
@@ -1261,6 +1229,77 @@ namespace CliCliBoy
                     updateTitle();
                 }
             }
+        }
+
+        /**
+         * cliファイルを上書き保存。名前がついていなければfileSaveAs()を実行
+         */
+        private void fileSave()
+        {
+            if (Globals.Instance.DataFilePath == null)
+            {
+                fileSaveAs();
+                return;
+            }
+            Globals.Instance.DataContext.Serialize();
+        }
+
+        /**
+         * 指定されたcliファイルを開く
+         */
+        private void fileOpen(string filePath)
+        {
+            if (mContext.IsModified)
+            {
+                fileSave();
+            }
+            mContext.UnbindView();
+
+            Globals.Instance.DataFilePath = filePath;
+            var manager = Manager.Deserialize();
+            Globals.Instance.DataContext = manager;
+            mContext = manager;
+            mContext.BindView(this);
+            this.DataContext = mContext;
+
+            mContext.SelectProjectsFromIdList();
+            updateTitle();
+        }
+
+        /**
+         * cliファイルを選んで開く
+         */
+        private void fileOpen()
+        {
+            var dlg = new Microsoft.Win32.OpenFileDialog();
+            dlg.FileName = Globals.Instance.DataFilePath ?? "";
+            dlg.Filter = "CliCli Files(*.clc)|*.clc;*.clicli|All Files(*.*)|*.*";
+            dlg.DefaultExt = "clc";
+            dlg.RestoreDirectory = true;
+            if (dlg.ShowDialog() == true)
+            {
+                fileOpen(dlg.FileName);
+            }
+        }
+
+        private void HandleFileNew(object sender, ExecutedRoutedEventArgs e)
+        {
+            fileCreate();
+        }
+
+        private void HandleFileOpen(object sender, ExecutedRoutedEventArgs e)
+        {
+            fileOpen();
+        }
+
+        private void HandleFileSave(object sender, ExecutedRoutedEventArgs e)
+        {
+            fileSave();
+        }
+
+        private void HandleFileSaveAs(object sender, ExecutedRoutedEventArgs e)
+        {
+            fileSaveAs();
         }
 
         private void FileMenu_Opened(object sender, RoutedEventArgs e)
@@ -1308,19 +1347,7 @@ namespace CliCliBoy
             var item = sender as MenuItem;
             if(null!=item)
             {
-                Globals.Instance.DataFilePath = (string)item.CommandParameter;
-                var manager = Manager.Deserialize();
-
-                mContext.UnbindView();
-
-                Globals.Instance.DataContext = manager;
-                mContext = manager;
-                mContext.BindView(this);
-                this.DataContext = mContext;
-
-                mContext.SelectProjectsFromIdList();
-                updateTitle();
-
+                fileOpen((string)item.CommandParameter);
             }
         }
 
