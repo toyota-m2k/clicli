@@ -1317,14 +1317,11 @@ namespace CliCliBoy
                     menu.Items.Add(new Separator());
                     foreach(var s in Globals.Instance.Settings.MRU)
                     {
-                        if(s != Globals.Instance.DataFilePath)
-                        {
-                            item = new MenuItem();
-                            item.Header = s;
-                            item.CommandParameter = s;
-                            item.Click += OnMruCommand;
-                            menu.Items.Add(item);
-                        }
+                        item = new MenuItem();
+                        item.Header = s;
+                        item.CommandParameter = s;
+                        item.Click += OnMruCommand;
+                        menu.Items.Add(item);
                     }
                     menu.Items.Add(new Separator());
 
@@ -1347,7 +1344,11 @@ namespace CliCliBoy
             var item = sender as MenuItem;
             if(null!=item)
             {
-                fileOpen((string)item.CommandParameter);
+                var filePath = item.CommandParameter as string;
+                if (null != filePath && filePath != Globals.Instance.DataFilePath)
+                {
+                    fileOpen(filePath);
+                }
             }
         }
 

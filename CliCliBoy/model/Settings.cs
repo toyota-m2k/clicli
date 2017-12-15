@@ -44,18 +44,7 @@ namespace CliCliBoy.model
         {
             get
             {
-                foreach (var s in MRU)
-                {
-                    if (s == Globals.Instance.DataFilePath)
-                    {
-                        continue;
-                    }
-                    else
-                    {
-                        return true;
-                    }
-                }
-                return false;
+                return MRU.Count > 0;
             }
         }
 
