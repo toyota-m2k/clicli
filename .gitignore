@@ -1,5 +1,4 @@
-.vs
-.svn
-*.suo
-CliCliBoy/bin
-CliCliBoy/obj
+.vs/
+CliCliBoy/bin/
+CliCliBoy/obj/
+CliCliBoy.csproj.user
