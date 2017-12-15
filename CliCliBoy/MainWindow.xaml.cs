@@ -1404,6 +1404,15 @@ namespace CliCliBoy
             }
         }
 
+        private void selectAndFocusItem(ListView listView, object item)
+        {
+            if (null != item)
+            {
+                listView.SelectedItem = item;
+                Keyboard.Focus(listView.ItemContainerGenerator.ContainerFromItem(item) as ListViewItem);
+            }
+        }
+
         private void Hyperlink_ConditionPos(object sender, RoutedEventArgs e)
         {
             var target = ((FrameworkContentElement)sender).DataContext as TargetItem;
@@ -1430,6 +1439,7 @@ namespace CliCliBoy
                 }
                 DbgOut.Flush();
             }
+            selectAndFocusItem(TargetListView, target);
         }
 
         private void Hyperlink_TargetPos(object sender, RoutedEventArgs e)
@@ -1439,6 +1449,7 @@ namespace CliCliBoy
             {
                 MouseCursorWindow.Show(target.Clicker.ClickPoint);
             }
+            selectAndFocusItem(TargetListView, target);
         }
 
         private void BtnLink_Click(object sender, RoutedEventArgs e)
@@ -1449,6 +1460,7 @@ namespace CliCliBoy
                 System.Diagnostics.Process.Start(target.URL);
                 ProjectListView.SelectedItem = target;
             }
+            selectAndFocusItem(ProjectListView, target);
         }
     }
 }

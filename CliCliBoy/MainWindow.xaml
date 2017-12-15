@@ -292,7 +292,7 @@
                                     <GridViewColumn Width="28">
                                         <GridViewColumn.CellTemplate>
                                             <DataTemplate>
-                                                <Button Style="{StaticResource ImageButtonStyle}" Click="BtnLink_Click" Visibility="{Binding HasURL, Converter={StaticResource BoolToVisibility}}">
+                                                <Button Style="{StaticResource ImageButtonStyle}" Click="BtnLink_Click" Visibility="{Binding HasURL, Converter={StaticResource BoolToVisibility}}" Focusable="False">
                                                     <Image Source="{StaticResource LinkIcon}"/>
                                                 </Button>
                                             </DataTemplate>
@@ -563,7 +563,7 @@
                                         <DataTemplate>
                                             <Grid Height="24" HorizontalAlignment="Stretch">
                                                 <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center">
-                                                    <Hyperlink Style="{StaticResource NoUnderlineHyperlink}" Click="Hyperlink_TargetPos">
+                                                    <Hyperlink Style="{StaticResource NoUnderlineHyperlink}" Click="Hyperlink_TargetPos" Focusable="False">
                                                         <Run>
                                                             <Run.Text>
                                                                 <MultiBinding StringFormat="{}{0},{1}">
@@ -653,7 +653,7 @@
                                                         Grid.Column="1"
                                                         Visibility="{Binding ConditionList.Type, Converter={StaticResource NegEnumVisibilityConverter}, ConverterParameter=NONE}"
                                                         HorizontalAlignment="Center" VerticalAlignment="Center">
-                                                        <Hyperlink Style="{StaticResource NoUnderlineHyperlink}" Click="Hyperlink_ConditionPos">
+                                                        <Hyperlink Style="{StaticResource NoUnderlineHyperlink}" Click="Hyperlink_ConditionPos" Focusable="False">
                                                             <Run>
                                                                 <Run.Text>
                                                                     <MultiBinding StringFormat="{}{0},{1}">
