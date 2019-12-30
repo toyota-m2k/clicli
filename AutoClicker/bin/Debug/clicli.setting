@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Settings xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Placement>
+    <HasValue>true</HasValue>
+    <Placement>
+      <length>44</length>
+      <flags>0</flags>
+      <showCmd>1</showCmd>
+      <minPosition>
+        <X>-1</X>
+        <Y>-1</Y>
+      </minPosition>
+      <maxPosition>
+        <X>-1</X>
+        <Y>-1</Y>
+      </maxPosition>
+      <normalPosition>
+        <Left>316</Left>
+        <Top>347</Top>
+        <Right>1184</Right>
+        <Bottom>903</Bottom>
+      </normalPosition>
+    </Placement>
+  </Placement>
+  <FilePath>default.clc</FilePath>
+  <MRU>
+    <string>default.clc</string>
+    <string>F:\mitsuki\dev\win\clicli\AutoClicker\bin\Debug\default.clicli</string>
+    <string>F:\mitsuki\Dropbox\bin\CLI\home.clicli</string>
+    <string>default.clicli</string>
+  </MRU>
+</Settings>

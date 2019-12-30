@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Settings xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Placement>
+    <HasValue>true</HasValue>
+    <Placement>
+      <length>44</length>
+      <flags>0</flags>
+      <showCmd>1</showCmd>
+      <minPosition>
+        <X>-1</X>
+        <Y>-1</Y>
+      </minPosition>
+      <maxPosition>
+        <X>-1</X>
+        <Y>-1</Y>
+      </maxPosition>
+      <normalPosition>
+        <Left>44</Left>
+        <Top>563</Top>
+        <Right>912</Right>
+        <Bottom>1013</Bottom>
+      </normalPosition>
+    </Placement>
+  </Placement>
+  <FilePath>default.clicli</FilePath>
+  <MRU>
+    <string>default.clicli</string>
+  </MRU>
+</Settings>

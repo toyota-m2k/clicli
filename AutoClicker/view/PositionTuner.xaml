@@ -1,0 +1,30 @@
+﻿<UserControl x:Class="AutoClicker.view.PositionTuner"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:AutoClicker.view"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <UserControl.Resources>
+        <ResourceDictionary Source="CommonResource.xaml"/>
+    </UserControl.Resources>
+
+    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+        <Canvas Width="400" Height="400" MouseDown="OnMouseDown" MouseMove="OnMouseMove" MouseUp="OnMouseUp">
+            <Image x:Name="CapturedImage" Width="{Binding MapWidth}" Height="{Binding MapHeight}" Stretch="Fill"/>
+            <Rectangle Width="{Binding ZoomRatio}" Height="{Binding MapHeight}" Fill="Black" Canvas.Left="{Binding CrosshairOffset.X}" Opacity="0.1"/>
+            <Rectangle Width="{Binding MapWidth}" Height="{Binding ZoomRatio}" Fill="Black" Canvas.Top="{Binding CrosshairOffset.Y}" Opacity="0.1"/>
+            <Rectangle Width="{Binding ZoomRatio}" Height="{Binding ZoomRatio}" Fill="Yellow" Canvas.Left="{Binding CrosshairOffset.X}" Canvas.Top="{Binding CrosshairOffset.Y}"/>
+        </Canvas>
+        <StackPanel Orientation="Vertical" Margin="15,0,0,0" VerticalAlignment="Center">
+            <Button Margin="0,0,0,10" Style="{StaticResource OkButton}" Content="OK" Width="80" IsDefault="True" Click="Button_Ok"/>
+            <Button Margin="0,0,0,10" Style="{StaticResource CancelButton}" Content="Cancel" Width="80" IsCancel="True" Click="Button_Cancel"/>
+            <Button Margin="0,0,0,10" Style="{StaticResource NorButton}" Content="Update" Width="80" Click="Button_Capture"/>
+            <RadioButton Margin="0,5,0,2" GroupName="Magnification" Content="x10" IsChecked="{Binding ViewMagnification, Mode=TwoWay, Converter={StaticResource EnumBooleanConverter}, ConverterParameter=SMALL}"/>
+            <RadioButton Margin="0,0,0,2" GroupName="Magnification" Content="x15" IsChecked="{Binding ViewMagnification, Mode=TwoWay, Converter={StaticResource EnumBooleanConverter}, ConverterParameter=MEDIUM}"/>
+            <RadioButton Margin="0,0,0,2" GroupName="Magnification" Content="x20" IsChecked="{Binding ViewMagnification, Mode=TwoWay, Converter={StaticResource EnumBooleanConverter}, ConverterParameter=LARGE}"/>
+            <RadioButton Margin="0,0,0,2" GroupName="Magnification" Content="x30" IsChecked="{Binding ViewMagnification, Mode=TwoWay, Converter={StaticResource EnumBooleanConverter}, ConverterParameter=EXTRA}"/>
+        </StackPanel>
+    </StackPanel>
+</UserControl>

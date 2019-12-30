@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Manager xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <HotKey>HK_NONE</HotKey>
+  <Projects>
+    <Registrations>
+      <RegItems>
+        <RegistrationItem>
+          <Projects />
+          <RegistNo>1</RegistNo>
+        </RegistrationItem>
+        <RegistrationItem>
+          <Projects />
+          <RegistNo>2</RegistNo>
+        </RegistrationItem>
+        <RegistrationItem>
+          <Projects />
+          <RegistNo>3</RegistNo>
+        </RegistrationItem>
+        <RegistrationItem>
+          <Projects />
+          <RegistNo>4</RegistNo>
+        </RegistrationItem>
+        <RegistrationItem>
+          <Projects />
+          <RegistNo>5</RegistNo>
+        </RegistrationItem>
+      </RegItems>
+    </Registrations>
+    <Projects>
+      <Project>
+        <Ratio>100</Ratio>
+        <Mode>
+          <IsRelative>true</IsRelative>
+          <BasePoint>
+            <X>0</X>
+            <Y>0</Y>
+          </BasePoint>
+        </Mode>
+        <Targets />
+        <Repeat>0</Repeat>
+        <ID>1</ID>
+        <Name>default</Name>
+      </Project>
+    </Projects>
+    <NextId>2</NextId>
+  </Projects>
+  <SelectedProjectIDs>
+    <int>1</int>
+  </SelectedProjectIDs>
+  <PositionTunerMagnification>SMALL</PositionTunerMagnification>
+</Manager>
