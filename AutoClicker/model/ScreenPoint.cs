@@ -176,9 +176,12 @@ namespace AutoClicker.model
             IsModified = true;
         }
 
-        public bool Equals(ScreenPoint s)
-        {
-            return null!=null && s.Point == Point && BasePoint == s.BasePoint && Ratio == s.Ratio;
+        public override bool Equals(object obj) {
+            var s = obj as ScreenPoint;
+            if(s==null) { 
+                return false;
+            }
+            return s.Point == Point && BasePoint == s.BasePoint && Ratio == s.Ratio;
         }
 
         public static bool operator ==(ScreenPoint a, ScreenPoint b)
@@ -205,6 +208,14 @@ namespace AutoClicker.model
         public ScreenPoint Clone()
         {
             return new ScreenPoint(this);
+        }
+
+        public override int GetHashCode() {
+            var hashCode = 89648651;
+            hashCode = hashCode * -1521134295 + Ratio.GetHashCode();
+            hashCode = hashCode * -1521134295 + EqualityComparer<Point>.Default.GetHashCode(Point);
+            hashCode = hashCode * -1521134295 + EqualityComparer<Point>.Default.GetHashCode(BasePoint);
+            return hashCode;
         }
 
         Point IClicker.ClickPoint

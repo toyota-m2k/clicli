@@ -75,38 +75,45 @@ namespace AutoClicker.model
             _position = new Rectangle();
         }
 
-        public override bool Equals(Object o)
-        {
-            var p = o as TargetWinPos;
-            if (null == p)
-            {
+        //public override bool Equals(Object o) {
+        //    var p = o as TargetWinPos;
+        //    if (null == p) {
+        //        return false;
+        //    }
+        //    if (hasValue) {
+        //        return (p.hasValue && p.Position == Position);
+        //    } else {
+        //        return !p.hasValue;
+        //    }
+        //}
+
+        public override bool Equals(object obj) {
+            var p = obj as TargetWinPos;
+            if (null == p) {
                 return false;
             }
-            if (hasValue)
-            {
+            if (hasValue) {
                 return (p.hasValue && p.Position == Position);
-            }
-            else
-            {
+            } else {
                 return !p.hasValue;
             }
         }
 
-        public bool Equals(TargetWinPos p)
-        {
-            if (null == p)
-            {
-                return false;
-            }
-            if (hasValue)
-            {
-                return (p.hasValue && p.Position == Position);
-            }
-            else
-            {
-                return !p.hasValue;
-            }
-        }
+        //public bool Equals(TargetWinPos p)
+        //{
+        //    if (null == p)
+        //    {
+        //        return false;
+        //    }
+        //    if (hasValue)
+        //    {
+        //        return (p.hasValue && p.Position == Position);
+        //    }
+        //    else
+        //    {
+        //        return !p.hasValue;
+        //    }
+        //}
 
 
         public static bool operator ==(TargetWinPos a, TargetWinPos b)
